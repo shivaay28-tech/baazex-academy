@@ -22,7 +22,7 @@ npm run dev
 
 Open [http://localhost:5173](http://localhost:5173).
 
-Live site: [https://shivaay28-tech.github.io/baazex-academy/](https://shivaay28-tech.github.io/baazex-academy/)
+Live site: [https://baazex-academy.vercel.app/](https://baazex-academy.vercel.app/)
 
 ## Scripts
 
