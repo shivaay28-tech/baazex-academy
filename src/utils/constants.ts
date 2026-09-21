@@ -20,7 +20,6 @@ export const STORAGE_KEYS = {
   resetTokens: 'baazex.academy.resetTokens',
   conversations: 'baazex.academy.conversations',
   aiCredits: 'baazex.academy.aiCredits',
-  aiSettings: 'baazex.academy.aiSettings',
 } as const
 
 export const FREE_ANALYSES = 80

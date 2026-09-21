@@ -211,11 +211,4 @@ export interface Instrument {
   sessionNote: string
 }
 
-export interface AiSettings {
-  answerLength: AiAnswerLength
-  speakReplies: boolean
-  apiKey?: string
-  baseUrl?: string
-  model?: string
-}
 

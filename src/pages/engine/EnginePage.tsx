@@ -9,7 +9,7 @@ import { useToast } from '@/context/ToastContext'
 import { instruments } from '@/data/instruments'
 import { aiService } from '@/services/ai'
 import { conversationService, newMessage } from '@/services/conversations'
-import type { AiAttachment, AiConversation, AiSettings } from '@/types'
+import type { AiAttachment, AiConversation } from '@/types'
 import { DISCLAIMER } from '@/utils/constants'
 import { analysisTitle, uid } from '@/utils/format'
 import { Camera, Clapperboard, Copy, Menu, MonitorUp, NotebookPen, RefreshCw } from 'lucide-react'
@@ -28,9 +28,7 @@ export function EnginePage() {
   const [instrument, setInstrument] = useState<string | undefined>()
   const [pendingFiles, setPendingFiles] = useState<AiAttachment[]>([])
   const [sending, setSending] = useState(false)
-  const [settingsOpen, setSettingsOpen] = useState(false)
   const [creditsOpen, setCreditsOpen] = useState(false)
-  const [settings, setSettings] = useState<AiSettings>(() => conversationService.settings())
   const [mobileNav, setMobileNav] = useState(false)
   const [stream, setStream] = useState('')
   const [thinking, setThinking] = useState('')
@@ -106,11 +104,8 @@ export function EnginePage() {
           prompt: userMessage.content,
           instrument: symbol ?? instrument,
           attachments: userMessage.attachments,
-          answerLength: settings.answerLength,
+          answerLength: 'standard',
           history: (existing?.messages ?? []).map((item) => ({ role: item.role, content: item.content })),
-          apiKey: settings.apiKey,
-          baseUrl: settings.baseUrl,
-          model: settings.model,
         },
         (token) => {
           output += token
@@ -128,11 +123,6 @@ export function EnginePage() {
       if (!output.trim()) return
       conversationService.consume(user?.id)
       conversationService.appendMessage(conversationId, newMessage('assistant', output.trim()))
-      if (settings.speakReplies && 'speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(output.slice(0, 420))
-        window.speechSynthesis.cancel()
-        window.speechSynthesis.speak(utterance)
-      }
       refreshList()
     } catch (error) {
       answering.delete(key)
@@ -304,7 +294,6 @@ export function EnginePage() {
             setConversations(next)
             if (activeId === id) setActiveId(next[0]?.id)
           }}
-          onSettings={() => setSettingsOpen(true)}
           remaining={remaining}
           limit={limit}
         />
@@ -334,10 +323,6 @@ export function EnginePage() {
                 const next = conversationService.list()
                 setConversations(next)
                 if (activeId === id) setActiveId(next[0]?.id)
-              }}
-              onSettings={() => {
-                setSettingsOpen(true)
-                setMobileNav(false)
               }}
               remaining={remaining}
               limit={limit}
@@ -547,76 +532,6 @@ export function EnginePage() {
           event.target.value = ''
         }}
       />
-
-      <Modal open={settingsOpen} title="Engine settings" onClose={() => setSettingsOpen(false)}>
-        <div className="space-y-4 text-sm text-ink">
-          <p className="font-semibold">Answer length</p>
-          <div className="flex gap-2">
-            {(['brief', 'standard'] as const).map((item) => (
-              <button
-                key={item}
-                type="button"
-                className={`rounded-xl px-3 py-2 capitalize ${settings.answerLength === item ? 'bg-navy text-white' : 'bg-canvas'}`}
-                onClick={() => {
-                  const next = { ...settings, answerLength: item }
-                  setSettings(next)
-                  conversationService.saveSettings(next)
-                }}
-              >
-                {item}
-              </button>
-            ))}
-          </div>
-          <label className="flex items-center justify-between rounded-xl bg-canvas px-3 py-3">
-            <span className="font-semibold">Speak replies aloud</span>
-            <input
-              type="checkbox"
-              checked={settings.speakReplies}
-              onChange={(event) => {
-                const next = { ...settings, speakReplies: event.target.checked }
-                setSettings(next)
-                conversationService.saveSettings(next)
-              }}
-            />
-          </label>
-          <p className="font-semibold">Optional live API (ChatGPT / Groq / OpenRouter)</p>
-          <input
-            className="h-11 w-full rounded-xl border border-line px-3"
-            placeholder="API key (stored only in this browser)"
-            type="password"
-            value={settings.apiKey ?? ''}
-            onChange={(event) => {
-              const next = { ...settings, apiKey: event.target.value }
-              setSettings(next)
-              conversationService.saveSettings(next)
-            }}
-          />
-          <input
-            className="h-11 w-full rounded-xl border border-line px-3"
-            placeholder="Base URL (optional)"
-            value={settings.baseUrl ?? ''}
-            onChange={(event) => {
-              const next = { ...settings, baseUrl: event.target.value }
-              setSettings(next)
-              conversationService.saveSettings(next)
-            }}
-          />
-          <input
-            className="h-11 w-full rounded-xl border border-line px-3"
-            placeholder="Model (optional, e.g. gpt-4o-mini)"
-            value={settings.model ?? ''}
-            onChange={(event) => {
-              const next = { ...settings, model: event.target.value }
-              setSettings(next)
-              conversationService.saveSettings(next)
-            }}
-          />
-          <p className="text-xs text-muted">
-            Leave these blank to use the built-in live tutor. Paste an OpenAI, Groq, or OpenRouter key to use your own model. This is still education only — not a signal service.
-          </p>
-          <p className="text-xs text-muted">{DISCLAIMER}</p>
-        </div>
-      </Modal>
 
       <Modal open={creditsOpen} title="Your free analyses are used up" onClose={() => setCreditsOpen(false)}>
         <p className="text-sm text-muted">

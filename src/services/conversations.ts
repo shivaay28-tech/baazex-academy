@@ -1,5 +1,5 @@
 import { readJson, writeJson } from '@/services/storage'
-import type { AiConversation, AiMessage, AiSettings } from '@/types'
+import type { AiConversation, AiMessage } from '@/types'
 import { FREE_ANALYSES, MEMBER_ANALYSES, STORAGE_KEYS } from '@/utils/constants'
 import { uid } from '@/utils/format'
 
@@ -77,17 +77,6 @@ export const conversationService = {
       updatedAt: new Date().toISOString(),
       messages: current.messages.slice(0, -1),
     })
-  },
-
-  settings(): AiSettings {
-    return readJson<AiSettings>(STORAGE_KEYS.aiSettings, {
-      answerLength: 'standard',
-      speakReplies: false,
-    })
-  },
-
-  saveSettings(settings: AiSettings) {
-    writeJson(STORAGE_KEYS.aiSettings, settings)
   },
 
   creditLimit(loggedIn: boolean) {

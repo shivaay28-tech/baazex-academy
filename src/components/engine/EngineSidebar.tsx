@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext'
 import type { AiConversation } from '@/types'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
-import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Settings, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export function EngineSidebar({
@@ -16,7 +16,6 @@ export function EngineSidebar({
   onNew,
   onSelect,
   onDelete,
-  onSettings,
   remaining,
   limit,
 }: {
@@ -29,7 +28,6 @@ export function EngineSidebar({
   onNew: () => void
   onSelect: (id: string) => void
   onDelete: (id: string) => void
-  onSettings: () => void
   remaining: number
   limit: number
 }) {
@@ -128,10 +126,6 @@ export function EngineSidebar({
             )}
           </Link>
         )}
-        <button type="button" onClick={onSettings} className={cn('mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-white/55 hover:bg-white/8', collapsed && 'justify-center')}>
-          <Settings className="h-4 w-4" />
-          {collapsed ? <span className="sr-only">Settings</span> : 'Settings'}
-        </button>
       </div>
     </aside>
   )
