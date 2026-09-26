@@ -10,6 +10,7 @@ interface AcademyContextValue {
   revision: number
   refresh: () => void
   enroll: (courseId: string) => Promise<void>
+  enrollMany: (courseIds: string[]) => Promise<number>
   toggleSaved: (courseId: string) => void
   completeLesson: (courseId: string, lessonId: string, title: string) => Promise<void>
   courseProgress: (courseId: string) => { completed: number; total: number; percent: number }
@@ -31,6 +32,16 @@ export function AcademyProvider({ children }: { children: ReactNode }) {
       if (!user) return
       await progressService.enroll(user.id, courseId)
       refresh()
+    },
+    [user, refresh],
+  )
+
+  const enrollMany = useCallback(
+    async (courseIds: string[]) => {
+      if (!user) return 0
+      const added = await progressService.enrollMany(user.id, courseIds)
+      refresh()
+      return added
     },
     [user, refresh],
   )
@@ -80,13 +91,14 @@ export function AcademyProvider({ children }: { children: ReactNode }) {
       revision,
       refresh,
       enroll,
+      enrollMany,
       toggleSaved,
       completeLesson,
       courseProgress,
       isEnrolled,
       isSaved,
     }),
-    [courses, revision, refresh, enroll, toggleSaved, completeLesson, courseProgress, isEnrolled, isSaved],
+    [courses, revision, refresh, enroll, enrollMany, toggleSaved, completeLesson, courseProgress, isEnrolled, isSaved],
   )
 
   return <AcademyContext.Provider value={value}>{children}</AcademyContext.Provider>

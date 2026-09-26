@@ -46,12 +46,12 @@ export function AdminCoursesPage() {
 
   const filtered = courses.filter((course) => course.title.toLowerCase().includes(query.toLowerCase()))
 
-  function save() {
+  function save(addAnother = false) {
     if (!editing) return
     catalogService.saveCourse(editing)
     refresh()
     push('success', 'Course saved')
-    setEditing(null)
+    setEditing(addAnother ? catalogService.createEmptyCourse() : null)
   }
 
   return (
@@ -135,7 +135,12 @@ export function AdminCoursesPage() {
                 ]}
               />
             </div>
-            <Button onClick={save}>Save course</Button>
+            <div className="flex flex-wrap gap-2">
+              <Button onClick={() => save(false)}>Save course</Button>
+              <Button variant="secondary" onClick={() => save(true)}>
+                Save and add another
+              </Button>
+            </div>
           </div>
         ) : null}
       </Modal>

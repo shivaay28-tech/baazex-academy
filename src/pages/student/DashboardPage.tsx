@@ -60,6 +60,37 @@ export function DashboardPage() {
         <DashboardStatCard label="Overall progress" value={`${overall}%`} icon={Award} hint="Average across enrolled courses" />
       </div>
 
+      {enrolled.length ? (
+        <section className="mt-8">
+          <div className="flex items-center justify-between">
+            <h2 className="font-bold text-ink">Your courses</h2>
+            <Link to="/my-courses" className="text-sm font-semibold text-accent">
+              Open all
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {enrolled.map((course) => {
+              const lessons = getCourseLessons(course)
+              const done = progressService.completedLessonIds(user?.id ?? '', course.id)
+              const next = lessons.find((lesson) => !done.includes(lesson.id)) ?? lessons[0]
+              return (
+                <Link
+                  key={course.id}
+                  to={next ? `/learn/${course.slug}/${next.slug}` : `/courses/${course.slug}`}
+                  className="panel rounded-2xl p-4 hover:border-bright/40"
+                >
+                  <p className="font-bold text-ink">{course.title}</p>
+                  <p className="mt-1 text-sm text-muted">{next?.title ?? 'Open the course'}</p>
+                  <div className="mt-3">
+                    <ProgressBar value={courseProgress(course.id).percent} size="sm" />
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+        </section>
+      ) : null}
+
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
         <article className="rounded-3xl border border-bright/25 bg-navy p-6 text-ink shadow-[inset_0_0_80px_rgb(0_163_255_/_0.12)] lg:col-span-2">
           <p className="text-xs font-bold tracking-[0.16em] text-ink uppercase">Continue learning</p>

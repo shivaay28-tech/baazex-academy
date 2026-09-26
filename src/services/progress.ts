@@ -134,6 +134,32 @@ export const progressService = {
     return record
   },
 
+  async enrollMany(userId: string, courseIds: string[]) {
+    await delay(350)
+    const enrollments = loadEnrollments()
+    const fresh = courseIds.filter(
+      (courseId) => !enrollments.some((item) => item.userId === userId && item.courseId === courseId),
+    )
+    if (!fresh.length) return 0
+    const at = new Date().toISOString()
+    const records: Enrollment[] = fresh.map((courseId) => ({
+      userId,
+      courseId,
+      enrolledAt: at,
+      saved: false,
+    }))
+    writeJson(STORAGE_KEYS.enrollments, [...records, ...enrollments])
+    pushActivity({
+      id: uid('act'),
+      userId,
+      type: 'enroll',
+      label: fresh.length === 1 ? 'Enrolled in a course' : `Enrolled in ${fresh.length} courses`,
+      detail: fresh.map((courseId) => catalogService.getCourse(courseId)?.title ?? 'Course').join(', '),
+      at,
+    })
+    return fresh.length
+  },
+
   toggleSaved(userId: string, courseId: string) {
     const enrollments = loadEnrollments()
     const existing = enrollments.find((item) => item.userId === userId && item.courseId === courseId)

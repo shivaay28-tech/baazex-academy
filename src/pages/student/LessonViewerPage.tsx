@@ -16,7 +16,7 @@ export function LessonViewerPage() {
   const { courseSlug, lessonSlug } = useParams()
   const course = catalogService.getCourse(courseSlug ?? '')
   const { user } = useAuth()
-  const { completeLesson, isEnrolled, refresh } = useAcademy()
+  const { completeLesson, enroll, isEnrolled, refresh } = useAcademy()
   const { push } = useToast()
   const navigate = useNavigate()
   const [sidebar, setSidebar] = useState(true)
@@ -25,7 +25,6 @@ export function LessonViewerPage() {
 
   const lesson = course && lessonSlug ? findLesson(course, lessonSlug) : undefined
   const adjacent = course && lessonSlug ? getAdjacentLessons(course, lessonSlug) : undefined
-  const enrolled = course ? isEnrolled(course.id) : false
   const completedIds = user && course ? progressService.completedLessonIds(user.id, course.id) : []
   const completed = lesson ? completedIds.includes(lesson.id) : false
 
@@ -35,11 +34,14 @@ export function LessonViewerPage() {
     }
   }, [user, lesson])
 
+  useEffect(() => {
+    if (user && course && !isEnrolled(course.id)) {
+      void enroll(course.id)
+    }
+  }, [user, course, enroll, isEnrolled])
+
   if (!course || !lesson) {
     return <Navigate to="/404" replace />
-  }
-  if (user && !enrolled) {
-    return <Navigate to={`/courses/${course.slug}`} replace />
   }
 
   const activeCourse = course
