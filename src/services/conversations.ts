@@ -1,6 +1,6 @@
 import { readJson, writeJson } from '@/services/storage'
-import type { AiConversation, AiMessage } from '@/types'
-import { FREE_ANALYSES, MEMBER_ANALYSES, STORAGE_KEYS } from '@/utils/constants'
+import type { AiConversation, AiMessage, EnginePlan } from '@/types'
+import { BASIC_QUESTIONS, FREE_QUESTIONS, STORAGE_KEYS } from '@/utils/constants'
 import { uid } from '@/utils/format'
 
 interface CreditState {
@@ -17,7 +17,7 @@ function saveConversations(items: AiConversation[]) {
 }
 
 function loadCredits(): CreditState {
-  return readJson<CreditState>(STORAGE_KEYS.aiCredits, { guestUsed: 0, byUser: {} })
+  return readJson<CreditState>(STORAGE_KEYS.questionCredits, { guestUsed: 0, byUser: {} })
 }
 
 export const conversationService = {
@@ -79,8 +79,8 @@ export const conversationService = {
     })
   },
 
-  creditLimit(loggedIn: boolean) {
-    return loggedIn ? MEMBER_ANALYSES : FREE_ANALYSES
+  creditLimit(plan: EnginePlan = 'free') {
+    return plan === 'basic' ? BASIC_QUESTIONS : FREE_QUESTIONS
   },
 
   used(userId?: string) {
@@ -89,8 +89,8 @@ export const conversationService = {
     return credits.guestUsed
   },
 
-  remaining(loggedIn: boolean, userId?: string) {
-    return Math.max(0, this.creditLimit(loggedIn) - this.used(userId))
+  remaining(plan: EnginePlan = 'free', userId?: string) {
+    return Math.max(0, this.creditLimit(plan) - this.used(userId))
   },
 
   consume(userId?: string) {
@@ -100,7 +100,7 @@ export const conversationService = {
     } else {
       credits.guestUsed += 1
     }
-    writeJson(STORAGE_KEYS.aiCredits, credits)
+    writeJson(STORAGE_KEYS.questionCredits, credits)
   },
 }
 

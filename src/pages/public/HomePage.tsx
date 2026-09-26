@@ -128,7 +128,7 @@ export function HomePage() {
               Study charts with an educational assistant
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-ink/65">
-              Share a screen, upload a screenshot, or send a short clip. The engine comments on structure, sessions, liquidity, and risk. It will not give a buy or sell call.
+              The engine reads the live TradingView price and answers with a buy or sell call, an entry, a stop, and a target. Five questions are free. Basic is $30.
             </p>
             <Button className="mt-6" size="lg" onClick={() => navigate('/engine')} icon={<Sparkles className="h-4 w-4" />}>
               Try the AI Engine

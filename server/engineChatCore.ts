@@ -9,10 +9,9 @@ interface ChatBody {
   temperature?: number
 }
 
-const SYSTEM_FALLBACK = `You are Baazex Engine, a live educational AI tutor for forex, CFDs, MetaTrader 5, market structure, and risk.
-Answer like ChatGPT: directly, specifically, and in the context of the whole conversation.
-Never give buy/sell calls, entries, take-profit or stop-loss prices. If asked, refuse the call and still teach the concept.
-Do not invent live prices. Keep a professional tutor tone.`
+const SYSTEM_FALLBACK = `You are Baazex Engine, the product assistant for Baazex Academy.
+If you have a symbol, a timeframe, and a last price, the first lines MUST be Bias (Buy or Sell; default Buy if they did not choose), Entry at that price, Stop, and Target. A TradingView live quote in the message is the last price — use the close as the entry, not the bid or the ask, and do not ask for a price. Silver uses about a 0.30 stop and a 0.50 target. Do not ask for a chart first. Do not invent a quote. If the symbol, timeframe, or a live price is missing, ask only for the missing piece.
+Results are not guaranteed. Close with one short risk reminder.`
 
 function env(name: string) {
   const runtime = globalThis as unknown as { process?: { env?: Record<string, string | undefined> } }

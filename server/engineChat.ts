@@ -1,4 +1,5 @@
 import { proxyEngineChat } from './engineChatCore.ts'
+import { fetchTradingViewQuotes } from './tradingViewQuotes.ts'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
 
@@ -39,15 +40,41 @@ async function adapt(req: IncomingMessage, res: ServerResponse) {
   res.end()
 }
 
+function requestedSymbols(req: IncomingMessage) {
+  const raw = req.url ?? ''
+  const query = raw.includes('?') ? raw.slice(raw.indexOf('?') + 1) : ''
+  const symbols = new URLSearchParams(query).get('symbols')
+  if (!symbols) return undefined
+  const names = symbols.split(',').map((item) => item.trim()).filter(Boolean)
+  return names.length ? names : undefined
+}
+
+function sendQuotes(req: IncomingMessage, res: ServerResponse) {
+  void fetchTradingViewQuotes(requestedSymbols(req))
+    .then((quotes) => {
+      res.statusCode = 200
+      res.setHeader('content-type', 'application/json')
+      res.setHeader('cache-control', 'no-store')
+      res.end(JSON.stringify({ quotes }))
+    })
+    .catch(() => {
+      res.statusCode = 502
+      res.setHeader('content-type', 'application/json')
+      res.end(JSON.stringify({ quotes: [] }))
+    })
+}
+
 export function engineChatPlugin(): Plugin {
   return {
     name: 'baazex-engine-chat',
     configureServer(server) {
+      server.middlewares.use('/api/engine/quotes', sendQuotes)
       server.middlewares.use('/api/engine/chat', (req, res) => {
         void adapt(req, res)
       })
     },
     configurePreviewServer(server) {
+      server.middlewares.use('/api/engine/quotes', sendQuotes)
       server.middlewares.use('/api/engine/chat', (req, res) => {
         void adapt(req, res)
       })

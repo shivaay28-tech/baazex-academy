@@ -1,12 +1,13 @@
 import { cn } from '@/utils/cn'
 import { Mic, MonitorUp, Paperclip, Phone, SendHorizonal, Square } from 'lucide-react'
-import type { FormEvent, ReactNode } from 'react'
+import { useRef, type ClipboardEvent, type FormEvent, type ReactNode } from 'react'
 
 export function EngineComposer({
   value,
   onChange,
   onSubmit,
   onAttach,
+  onPasteFiles,
   onScreen,
   onVoice,
   onStop,
@@ -18,6 +19,7 @@ export function EngineComposer({
   onChange: (value: string) => void
   onSubmit: (event?: FormEvent, value?: string) => void
   onAttach: () => void
+  onPasteFiles: (files: File[]) => void
   onScreen: () => void
   onVoice: () => void
   onStop?: () => void
@@ -26,16 +28,51 @@ export function EngineComposer({
   hasAttachments?: boolean
 }) {
   const canSend = Boolean(value.trim() || hasAttachments)
+  const fieldRef = useRef<HTMLTextAreaElement>(null)
+
+  function handlePaste(event: ClipboardEvent<HTMLFormElement>) {
+    const clipboard = event.clipboardData
+    const files = Array.from(clipboard.items)
+      .filter((item) => item.kind === 'file')
+      .map((item) => item.getAsFile())
+      .filter((file): file is File => Boolean(file))
+      .filter((file) => file.type.startsWith('image/') || file.type.startsWith('video/'))
+      .map((file, index) => {
+        if (file.name) return file
+        const extension = file.type.split('/')[1] || 'png'
+        return new File([file], `pasted-chart-${index + 1}.${extension}`, { type: file.type })
+      })
+
+    if (files.length) onPasteFiles(files)
+
+    const text = clipboard.getData('text/plain')
+    if (files.length && !text) event.preventDefault()
+    if (!text) return
+
+    event.preventDefault()
+    const field = fieldRef.current
+    const start = field?.selectionStart ?? value.length
+    const end = field?.selectionEnd ?? value.length
+    const next = `${value.slice(0, start)}${text}${value.slice(end)}`
+    onChange(next)
+    const cursor = start + text.length
+    requestAnimationFrame(() => {
+      field?.focus()
+      field?.setSelectionRange(cursor, cursor)
+    })
+  }
 
   return (
     <form
       onSubmit={onSubmit}
+      onPaste={handlePaste}
       className={cn(
         'rounded-[28px] border border-baazex/30 bg-white p-3 shadow-[0_0_0_1px_rgb(0_102_255_/_0.12),0_16px_40px_-24px_rgb(0_102_255_/_0.45)]',
         disabled ? 'border-white/10 opacity-70' : 'border-bright/35',
       )}
     >
       <textarea
+        ref={fieldRef}
         value={value}
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
@@ -66,7 +103,7 @@ export function EngineComposer({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <p className="hidden text-[11px] text-muted sm:block">Live tutor · education only</p>
+          <p className="hidden text-[11px] text-muted sm:block">Live tutor · results are not guaranteed</p>
           {sending ? (
             <button
               type="button"

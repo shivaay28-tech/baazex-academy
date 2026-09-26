@@ -7,17 +7,20 @@ import { Modal } from '@/components/ui/Modal'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { instruments } from '@/data/instruments'
+import { symbolsInText, tradingViewTicker } from '@/data/tradingView'
 import { aiService } from '@/services/ai'
+import { authService } from '@/services/auth'
 import { conversationService, newMessage } from '@/services/conversations'
+import { formatLiveQuote, tradingViewService, type LiveQuote } from '@/services/tradingView'
 import type { AiAttachment, AiConversation } from '@/types'
-import { DISCLAIMER } from '@/utils/constants'
+import { BASIC_PRICE, COMPANY_URL, DISCLAIMER } from '@/utils/constants'
 import { analysisTitle, uid } from '@/utils/format'
 import { Camera, Clapperboard, Copy, Menu, MonitorUp, NotebookPen, RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function EnginePage() {
-  const { user } = useAuth()
+  const { user, refresh } = useAuth()
   const { push } = useToast()
   const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
@@ -25,7 +28,10 @@ export function EnginePage() {
   const [activeId, setActiveId] = useState<string | undefined>(conversations[0]?.id)
   const [query, setQuery] = useState('')
   const [draft, setDraft] = useState('')
-  const [instrument, setInstrument] = useState<string | undefined>()
+  const [instrument, setInstrument] = useState('EURUSD')
+  const [quotes, setQuotes] = useState<LiveQuote[]>([])
+  const quotesRef = useRef<LiveQuote[]>([])
+  quotesRef.current = quotes
   const [pendingFiles, setPendingFiles] = useState<AiAttachment[]>([])
   const [sending, setSending] = useState(false)
   const [creditsOpen, setCreditsOpen] = useState(false)
@@ -39,9 +45,9 @@ export function EnginePage() {
   const videoRef = useRef<HTMLInputElement>(null)
   const threadRef = useRef<HTMLDivElement>(null)
 
-  const loggedIn = Boolean(user)
-  const remaining = conversationService.remaining(loggedIn, user?.id)
-  const limit = conversationService.creditLimit(loggedIn)
+  const plan = user?.plan === 'basic' ? 'basic' : 'free'
+  const remaining = conversationService.remaining(plan, user?.id)
+  const limit = conversationService.creditLimit(plan)
   const active = conversations.find((item) => item.id === activeId)
   const empty = (!active || active.messages.length === 0) && !sending
   const threadCount = (active?.messages.length ?? 0) + (stream ? 1 : 0)
@@ -60,7 +66,7 @@ export function EnginePage() {
     setActiveId(conversation.id)
     setDraft('')
     setPendingFiles([])
-    setInstrument(undefined)
+    setInstrument('EURUSD')
   }, [])
 
   useEffect(() => {
@@ -73,6 +79,29 @@ export function EnginePage() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [startNew])
+
+  useEffect(() => {
+    let stop = false
+    const load = async () => {
+      try {
+        const next = await tradingViewService.quotes()
+        if (!stop && next.length) {
+          setQuotes((current) => {
+            const extras = current.filter((item) => !next.some((quote) => quote.symbol === item.symbol))
+            return [...next, ...extras]
+          })
+        }
+      } catch {
+        // Keep the last tape. A failed fetch must not invent a price.
+      }
+    }
+    void load()
+    const id = window.setInterval(() => void load(), 20_000)
+    return () => {
+      stop = true
+      window.clearInterval(id)
+    }
+  }, [])
 
   useEffect(() => {
     threadRef.current?.scrollTo({ top: threadRef.current.scrollHeight, behavior: 'smooth' })
@@ -98,6 +127,27 @@ export function EnginePage() {
       const last = existing?.messages[existing.messages.length - 1]
       if (last?.role === 'assistant') return
 
+      const mentioned = symbolsInText(userMessage.content, symbol ?? instrument)
+      const have = new Set(quotesRef.current.map((item) => item.symbol))
+      const missing = mentioned.filter((item) => !have.has(item))
+      if (missing.length) {
+        try {
+          const extra = await tradingViewService.quotes(missing)
+          if (extra.length) {
+            const merged = [...quotesRef.current]
+            for (const quote of extra) {
+              const index = merged.findIndex((item) => item.symbol === quote.symbol)
+              if (index >= 0) merged[index] = quote
+              else merged.push(quote)
+            }
+            quotesRef.current = merged
+            setQuotes(merged)
+          }
+        } catch {
+          // A failed lookup must not invent a price.
+        }
+      }
+
       let output = ''
       await aiService.askStream(
         {
@@ -106,6 +156,7 @@ export function EnginePage() {
           attachments: userMessage.attachments,
           answerLength: 'standard',
           history: (existing?.messages ?? []).map((item) => ({ role: item.role, content: item.content })),
+          liveQuotes: quotesRef.current,
         },
         (token) => {
           output += token
@@ -217,7 +268,7 @@ export function EnginePage() {
         ...current,
         { id: uid('att'), name: 'screen-frame.jpg', mime: 'image/jpeg', dataUrl: frame, kind: 'image' },
       ])
-      push('success', 'Screen frame captured', 'This is used for educational commentary only.')
+      push('success', 'Screen frame captured', 'Send the symbol, timeframe, and last price with this chart.')
     } catch {
       push('info', 'Screen share cancelled')
     }
@@ -250,6 +301,17 @@ export function EnginePage() {
     setPendingFiles([])
     refreshList()
     await generateReply(conversation.id, userMessage, instrument)
+  }
+
+  function confirmBasic() {
+    if (!user) {
+      navigate('/register', { state: { from: '/engine' } })
+      return
+    }
+    authService.updateProfile(user.id, { plan: 'basic' })
+    refresh()
+    setCreditsOpen(false)
+    push('success', 'Basic plan is active', 'Basic includes 200 questions and a free Baazex trading account.')
   }
 
   function submit(event?: FormEvent, value?: string) {
@@ -296,6 +358,7 @@ export function EnginePage() {
           }}
           remaining={remaining}
           limit={limit}
+          plan={plan}
         />
       </div>
 
@@ -326,6 +389,7 @@ export function EnginePage() {
               }}
               remaining={remaining}
               limit={limit}
+              plan={plan}
             />
           </div>
         </div>
@@ -342,7 +406,7 @@ export function EnginePage() {
           </div>
           <div className="flex items-center gap-2">
             <span className="rounded-full border border-line px-3 py-1 text-[11px] text-muted">
-              {remaining} of {limit} {loggedIn ? 'left' : 'free left'}
+              {plan === 'basic' ? `${remaining} of ${limit} on Basic` : `${remaining} of ${limit} free`}
             </span>
             <span className="rounded-full border border-bright/30 bg-bright/10 px-3 py-1 text-[11px] font-semibold text-accent">
               Live
@@ -367,7 +431,7 @@ export function EnginePage() {
                 What are we <span className="text-accent">studying</span> today?
               </h1>
               <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
-                Drop a chart screenshot, a screen recording, or share your MT5 / TradingView window. You get an educational read of market structure, sessions, liquidity and risk — not a buy or sell call.
+                Pick a symbol. The engine uses the live TradingView price for the entry, stop, and target.
               </p>
               <div className="mt-8 grid w-full gap-3 sm:grid-cols-2">
                 <ActionCard icon={MonitorUp} title="Share my screen" text="Live read of your MT5 or TradingView chart" onClick={shareScreen} />
@@ -377,7 +441,7 @@ export function EnginePage() {
                   icon={NotebookPen}
                   title="Today's brief"
                   text="Sessions, calendar risk and study focus"
-                  onClick={() => void sendPrompt("Give me today's educational market brief for majors, gold and index CFDs. No trade calls.")}
+                  onClick={() => void sendPrompt('Give me a directional call on EURUSD, XAUUSD, and US30 for H1 using the live TradingView prices in this message.')}
                 />
               </div>
               <p className="mt-6 max-w-2xl text-[11px] leading-relaxed text-muted">{DISCLAIMER}</p>
@@ -460,7 +524,8 @@ export function EnginePage() {
         </div>
 
         <div className="border-t border-line px-3 py-3 sm:px-4">
-          <div className="mx-auto mb-3 flex max-w-3xl flex-wrap gap-1.5">
+          <LiveMarket symbol={instrument ?? 'EURUSD'} quotes={quotes} onSelect={setInstrument} />
+          <div className="mx-auto mb-3 flex max-w-3xl gap-1.5 overflow-x-auto pb-1">
             {instruments.map((item) => (
               <button
                 key={item.symbol}
@@ -468,10 +533,10 @@ export function EnginePage() {
                 onClick={() => {
                   setInstrument(item.symbol)
                   void sendPrompt(
-                    `Explain ${item.symbol} (${item.name}) as an educational study case. Cover how it is quoted, what typically moves it, session behaviour, and how to study it on a chart. No recommendation.`,
+                    `Give a directional call on ${item.symbol} (${item.name}) for H1 using the live TradingView price in this message.`,
                   )
                 }}
-                className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${instrument === item.symbol ? 'border-bright bg-bright/15 text-accent' : 'border-line text-muted hover:text-accent'}`}
+                className={`shrink-0 rounded-full border px-2.5 py-1 text-[11px] font-semibold ${instrument === item.symbol ? 'border-bright bg-bright/15 text-accent' : 'border-line text-muted hover:text-accent'}`}
               >
                 {item.symbol}
               </button>
@@ -492,10 +557,11 @@ export function EnginePage() {
               onChange={setDraft}
               onSubmit={submit}
               onAttach={() => fileRef.current?.click()}
+              onPasteFiles={(files) => void addFiles(files)}
               onScreen={shareScreen}
               onVoice={listenVoice}
               onStop={stopGenerating}
-              disabled={remaining <= 0}
+              disabled={false}
               sending={sending}
               hasAttachments={pendingFiles.length > 0}
             />
@@ -533,19 +599,91 @@ export function EnginePage() {
         }}
       />
 
-      <Modal open={creditsOpen} title="Your free analyses are used up" onClose={() => setCreditsOpen(false)}>
-        <p className="text-sm text-muted">
-          Create a free Baazex Academy account to continue using the educational engine and to save course progress. This is not a trading signal service.
-        </p>
-        <div className="mt-5 flex gap-2">
-          <button type="button" className="h-11 flex-1 rounded-xl bg-baazex font-semibold text-ink" onClick={() => navigate('/register')}>
-            Create account
-          </button>
-          <button type="button" className="h-11 flex-1 rounded-xl border border-line font-semibold" onClick={() => navigate('/login', { state: { from: '/engine' } })}>
-            Sign in
-          </button>
-        </div>
+      <Modal
+        open={creditsOpen}
+        title={plan === 'basic' ? 'Your Basic questions are used up' : 'Basic plan — $30'}
+        onClose={() => setCreditsOpen(false)}
+      >
+        {plan === 'basic' ? (
+          <p className="text-sm text-muted">You have used the 200 questions included with Basic.</p>
+        ) : (
+          <>
+            <p className="text-sm text-muted">
+              Five free questions are included. Basic is ${BASIC_PRICE} and adds 200 questions, plus a free Baazex trading account.
+            </p>
+            <div className="mt-5 flex flex-col gap-2">
+              <button type="button" className="h-11 rounded-xl bg-baazex font-semibold text-ink" onClick={confirmBasic}>
+                {user ? `Confirm Basic — $${BASIC_PRICE}` : 'Create an account to get Basic'}
+              </button>
+              {user ? null : (
+                <button
+                  type="button"
+                  className="h-11 rounded-xl border border-line font-semibold"
+                  onClick={() => navigate('/login', { state: { from: '/engine' } })}
+                >
+                  Sign in
+                </button>
+              )}
+              <a
+                href={COMPANY_URL}
+                className="flex h-11 items-center justify-center rounded-xl border border-line text-sm font-semibold text-accent"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open a free Baazex trading account
+              </a>
+            </div>
+          </>
+        )}
       </Modal>
+    </div>
+  )
+}
+
+function LiveMarket({
+  symbol,
+  quotes,
+  onSelect,
+}: {
+  symbol: string
+  quotes: LiveQuote[]
+  onSelect: (symbol: string) => void
+}) {
+  const active = quotes.find((item) => item.symbol === symbol)
+  return (
+    <div className="mx-auto mb-3 max-w-3xl">
+      <div className="mb-2 flex items-center justify-between gap-3">
+        <p className="text-[11px] font-bold tracking-[0.16em] text-muted uppercase">Live from TradingView</p>
+        {active ? (
+          <p className="text-sm font-bold text-ink">
+            {symbol} {formatLiveQuote(symbol, active.close)}
+            <span className={active.change >= 0 ? ' ml-1 text-success' : ' ml-1 text-danger'}>
+              {active.change >= 0 ? '+' : ''}
+              {active.change.toFixed(2)}%
+            </span>
+          </p>
+        ) : (
+          <p className="text-[11px] text-muted">Waiting for the live quote</p>
+        )}
+      </div>
+      <div className="flex gap-1.5 overflow-x-auto pb-1">
+        {instruments.map((item) => {
+          const quote = quotes.find((row) => row.symbol === item.symbol)
+          const selected = item.symbol === symbol
+          return (
+            <button
+              key={item.symbol}
+              type="button"
+              title={tradingViewTicker(item.symbol)}
+              onClick={() => onSelect(item.symbol)}
+              className={`shrink-0 rounded-xl border px-2.5 py-1.5 text-left ${selected ? 'border-bright bg-bright/15' : 'border-line hover:border-bright/40'}`}
+            >
+              <p className="text-[10px] font-bold text-muted">{item.symbol}</p>
+              <p className="text-xs font-bold text-ink">{quote ? formatLiveQuote(item.symbol, quote.close) : '—'}</p>
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }

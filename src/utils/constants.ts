@@ -20,10 +20,12 @@ export const STORAGE_KEYS = {
   resetTokens: 'baazex.academy.resetTokens',
   conversations: 'baazex.academy.conversations',
   aiCredits: 'baazex.academy.aiCredits',
+  questionCredits: 'baazex.academy.questionCredits',
 } as const
 
-export const FREE_ANALYSES = 80
-export const MEMBER_ANALYSES = 400
+export const FREE_QUESTIONS = 5
+export const BASIC_QUESTIONS = 200
+export const BASIC_PRICE = 30
 
 export const DEMO_STUDENT = {
   email: 'student@baazex.com',

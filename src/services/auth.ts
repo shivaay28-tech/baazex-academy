@@ -23,6 +23,7 @@ function publicUser(user: User): SessionUser {
     avatar: user.avatar,
     createdAt: user.createdAt,
     emailPreferences: user.emailPreferences,
+    plan: user.plan ?? 'free',
   }
 }
 

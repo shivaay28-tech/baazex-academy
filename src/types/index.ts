@@ -1,4 +1,5 @@
 export type Role = 'student' | 'admin'
+export type EnginePlan = 'free' | 'basic'
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced'
 export type CourseStatus = 'draft' | 'published'
 export type ToastTone = 'success' | 'error' | 'info'
@@ -21,6 +22,7 @@ export interface User {
   avatar?: string
   createdAt: string
   emailPreferences: EmailPreferences
+  plan?: EnginePlan
 }
 
 export type SessionUser = Omit<User, 'password'>

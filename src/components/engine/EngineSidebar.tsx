@@ -1,6 +1,6 @@
 import { Logo } from '@/components/ui/Logo'
 import { useAuth } from '@/context/AuthContext'
-import type { AiConversation } from '@/types'
+import type { AiConversation, EnginePlan } from '@/types'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
 import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react'
@@ -18,6 +18,7 @@ export function EngineSidebar({
   onDelete,
   remaining,
   limit,
+  plan,
 }: {
   collapsed: boolean
   onToggle: () => void
@@ -30,6 +31,7 @@ export function EngineSidebar({
   onDelete: (id: string) => void
   remaining: number
   limit: number
+  plan: EnginePlan
 }) {
   const { user } = useAuth()
   const visible = conversations.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()))
@@ -111,7 +113,9 @@ export function EngineSidebar({
             {collapsed ? null : (
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{user.fullName}</span>
-                <span className="block text-[11px] text-ink/40">{remaining} of {limit} analyses left</span>
+                <span className="block text-[11px] text-ink/40">
+                  {plan === 'basic' ? `${remaining} of ${limit} on Basic` : `${remaining} of ${limit} free`}
+                </span>
               </span>
             )}
           </Link>
@@ -121,7 +125,7 @@ export function EngineSidebar({
             {collapsed ? null : (
               <span>
                 <span className="block text-sm font-semibold">Sign in</span>
-                <span className="block text-[11px] text-ink/40">{remaining} free analyses left</span>
+                <span className="block text-[11px] text-ink/40">{remaining} of {limit} free</span>
               </span>
             )}
           </Link>

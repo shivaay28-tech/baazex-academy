@@ -17,19 +17,22 @@ import {
 } from '@/data/engineKnowledge'
 import type { AiAnswerLength, AiAttachment } from '@/types'
 import { DISCLAIMER } from '@/utils/constants'
+import { symbolsInText } from '@/data/tradingView'
+import { formatLiveQuote, type LiveQuote } from '@/services/tradingView'
 import { inspectAttachments, type ChartRead } from '@/utils/chartRead'
 
-const SYSTEM_RULES = `You are Baazex Engine, a live ChatGPT-style educational tutor for forex, CFDs, MetaTrader 5, market structure, sessions, risk, and trading psychology.
+const SYSTEM_RULES = `You are Baazex Engine, the product assistant for Baazex Academy (forex, CFDs, MetaTrader 5, sessions, and risk).
 
-Behave like a dynamic assistant, not a template:
-- Answer the user's actual question in the first sentences.
-- Use the full conversation history. Follow-ups refer to what was just discussed.
-- Be specific, natural, and structured. Use short headings and bullets when they help.
-- If a chart or screenshot is attached, comment on what is visible as a study worksheet, then teach how to read it. Do not invent candle-by-candle prices you cannot see.
-- Never give buy or sell calls, entries, take-profit, or stop-loss levels. If asked to trade, refuse the call and still teach the idea behind the question.
-- Do not invent live quotes. If you lack a price, say so and keep teaching.
-- You may discuss related topics (calendar, platform how-to, order types, psychology) whenever they help.
-- Close with one short risk reminder, not a repeated wall of legal text.`
+When the user asks about a market and you have a symbol, a timeframe, and a last price, the first lines of the answer MUST be the call. Do not ask for a chart first.
+- Symbol and timeframe
+- Bias: Buy or Sell. If they did not choose a side, use Buy and say it is the working bias.
+- Entry: the TradingView close number in the live-quote block. Never the bid and never the ask. If they typed their own last price, use that instead.
+- Stop and target: gold about $8 stop and $15 target; silver about $0.30 stop and $0.50 target; EURUSD about 25 pips stop and 40 pips target; yen pairs about 0.25 stop and 0.40 target; GBPUSD a little wider; index and oil CFDs use a small point distance beyond the entry
+- One short reason from how that product is quoted, which session matters, and what usually moves it
+
+A TradingView live quote in the message is the last price. Use that close as the entry and do not ask for a price that is already quoted.
+If the symbol, timeframe, or a live price is missing, ask only for the missing piece and do not invent a quote.
+Do not invent candle prices you cannot see. Results are not guaranteed. Close with one short risk reminder.`
 
 export type EngineTopic =
   | 'brief'
@@ -53,19 +56,11 @@ interface AskInput {
   attachments: AiAttachment[]
   answerLength: AiAnswerLength
   history: Array<{ role: 'user' | 'assistant'; content: string }>
+  liveQuotes?: LiveQuote[]
   apiKey?: string
   baseUrl?: string
   model?: string
 }
-
-const SYMBOL_ALIASES: Array<{ symbol: string; keys: string[] }> = [
-  { symbol: 'EURUSD', keys: ['eurusd', 'eur/usd', 'eur usd', 'euro dollar'] },
-  { symbol: 'XAUUSD', keys: ['xauusd', 'xau', 'gold'] },
-  { symbol: 'GBPUSD', keys: ['gbpusd', 'gbp/usd', 'gbp usd', 'cable', 'pound'] },
-  { symbol: 'US30', keys: ['us30', 'dow', 'djia', 'wall street'] },
-  { symbol: 'NAS100', keys: ['nas100', 'nasdaq', 'us100', 'ustec'] },
-  { symbol: 'USOIL', keys: ['usoil', 'wti', 'crude', 'brent', 'oil'] },
-]
 
 const TOPIC_KEYS: Array<{ topic: EngineTopic; keys: string[] }> = [
   { topic: 'brief', keys: ['brief', 'watchlist', 'daily study', "today's educational", "today's market", 'today briefing'] },
@@ -88,13 +83,7 @@ function normalize(text: string) {
 }
 
 function detectSymbols(text: string, selected?: string) {
-  const found = new Set<string>()
-  if (selected) found.add(selected)
-  const haystack = normalize(text)
-  for (const item of SYMBOL_ALIASES) {
-    if (item.keys.some((key) => haystack.includes(key))) found.add(item.symbol)
-  }
-  return [...found]
+  return symbolsInText(text, selected)
 }
 
 function detectTopics(text: string, hasMedia: boolean): EngineTopic[] {
@@ -131,6 +120,55 @@ function parseQuestion(input: AskInput) {
   return { symbols, topics, followUp: shortFollowUp }
 }
 
+const TIMEFRAME_PATTERN =
+  /\b(?:m1|m5|m15|m30|h1|h4|d1|w1|1m|5m|15m|30m|1h|4h|daily|weekly|\d+\s*(?:minute|hour)s?)\b/i
+
+const LEVEL_DISTANCE: Record<string, { stop: number; target: number }> = {
+  EURUSD: { stop: 0.0025, target: 0.004 },
+  GBPUSD: { stop: 0.003, target: 0.0048 },
+  XAUUSD: { stop: 8, target: 15 },
+  US30: { stop: 80, target: 140 },
+  NAS100: { stop: 60, target: 110 },
+  USOIL: { stop: 0.4, target: 0.7 },
+}
+
+function detectTimeframe(text: string) {
+  return text.match(TIMEFRAME_PATTERN)?.[0]
+}
+
+function detectPrice(text: string) {
+  const matches = text.match(/\b\d{1,6}(?:\.\d{1,5})?\b/g) ?? []
+  const quotes = matches
+    .map((item) => Number(item))
+    .filter((value) => value > 0 && !(Number.isInteger(value) && value >= 1900 && value <= 2100))
+    .filter((value) => !Number.isInteger(value) || value >= 20)
+  return quotes.at(-1)
+}
+
+function detectBias(text: string, slope?: ChartRead['slope']): 'buy' | 'sell' {
+  const haystack = normalize(text)
+  const sell = /\b(sell|short|bearish)\b/.test(haystack)
+  const buy = /\b(buy|long|bullish)\b/.test(haystack)
+  if (sell && !buy) return 'sell'
+  if (buy && !sell) return 'buy'
+  if (slope === 'lower to the right') return 'sell'
+  if (slope === 'higher to the right') return 'buy'
+  return 'buy'
+}
+
+function formatLevel(symbol: string, value: number) {
+  return formatLiveQuote(symbol, value)
+}
+
+function levelDistance(symbol: string, price: number) {
+  const known = LEVEL_DISTANCE[symbol]
+  if (known) return known
+  if (symbol === 'XAGUSD') return { stop: 0.3, target: 0.5 }
+  if (symbol.endsWith('JPY') && symbol.length === 6) return { stop: 0.25, target: 0.4 }
+  if (/^[A-Z]{6}$/.test(symbol)) return { stop: 0.0025, target: 0.004 }
+  return { stop: price * 0.004, target: price * 0.007 }
+}
+
 function heading(title: string) {
   return `**${title}**`
 }
@@ -155,7 +193,7 @@ function instrumentSection(symbol: string, brief: boolean) {
   const study = INSTRUMENT_STUDY[symbol]
   const name = instrumentName(symbol)
   const session = instrumentSession(symbol)
-  if (!study) return `${heading(`${symbol} study note`)}\nThis is an educational note on ${name}, not a call.`
+  if (!study) return `${heading(`${symbol} study note`)}\n${name} is the product in focus.`
   const parts = [
     heading(`${symbol} — ${name}`),
     study.product,
@@ -177,24 +215,17 @@ function chartSection(reads: ChartRead[], symbols: string[]) {
   return [
     heading(`What the ${reads[0]?.source === 'video' ? 'clip' : 'chart'} shows`),
     ...lines,
-    heading('How to read it as a worksheet'),
+    heading('How the picture sets the bias'),
     bullets([
-      `Name the timeframe before anything else. A 5-minute swing is not an H4 story${symbolText}.`,
-      'Mark the most recent swing high and swing low that are obvious on the picture. Those are labels of the past.',
-      'Say whether the series is overlapping (a range) or making a directional run of swings. Do not add “therefore buy/sell”.',
-      'Measure the height of that range in pips, points, or dollars, then ask what that distance costs at a tiny size.',
+      `A series that is higher to the right is a buy bias. Lower to the right is a sell bias${symbolText}.`,
+      'The stop belongs beyond the last obvious swing against that bias. The target is the next swing in the direction of the bias.',
+      'A chart image does not contain a trustworthy last price. Levels are only printed when you also give the last price.',
     ]),
   ].join('\n\n')
 }
 
 function topicSection(topic: EngineTopic, brief: boolean) {
-  if (topic === 'signals') {
-    return [
-      heading('No trade call'),
-      'I will not tell you to buy or sell, and I will not give an entry, take-profit, or stop-loss level. Those would be personalised recommendations.',
-      'You can still study the idea behind the question: how a stop is meant to cap a loss if price reaches a level you chose, how a limit waits, and how size decides whether that distance is survivable.',
-    ].join('\n\n')
-  }
+  if (topic === 'signals') return ''
   const body: Partial<Record<EngineTopic, string>> = {
     orders: `${heading('Order types')}\n${ORDER_NOTE}`,
     risk: `${heading('Risk, size and leverage')}\n${RISK_NOTE}`,
@@ -232,21 +263,86 @@ function briefSection(symbols: string[]) {
   ].join('\n\n')
 }
 
-function answerLead(prompt: string, symbols: string[], topics: EngineTopic[], followUp: boolean) {
+function answerLead(prompt: string, symbols: string[], followUp: boolean) {
   const asked = prompt.replace(/\s+/g, ' ').trim()
   const about = symbols.length ? ` — focusing on ${symbols.join(', ')}` : ''
-  if (topics.includes('signals')) {
-    return `You asked: “${asked}”${about}. I can teach the concepts in that question. I cannot give a trade.`
+  if (followUp) return `Follow-up received${about}.`
+  return `You asked: “${asked}”${about}.`
+}
+
+function marketQuestion(topics: EngineTopic[], symbols: string[]) {
+  return symbols.length > 0 || topics.some((topic) => ['signals', 'instrument', 'brief', 'chart', 'ta'].includes(topic))
+}
+
+function quoteFor(input: AskInput, symbol: string) {
+  return input.liveQuotes?.find((item) => item.symbol === symbol && Number.isFinite(item.close) && item.close > 0)
+}
+
+function oneCall(input: AskInput, symbol: string | undefined, context: string, reads: ChartRead[], typedPrice?: number) {
+  const timeframe = detectTimeframe(context)
+  const live = symbol ? quoteFor(input, symbol) : undefined
+  const price = typedPrice ?? live?.close
+  const missing = [
+    symbol ? null : 'the symbol (for example EURUSD or XAUUSD)',
+    timeframe ? null : 'the timeframe (for example H1 or H4)',
+    price !== undefined ? null : 'the last price — the TradingView quote did not load for this symbol',
+  ].filter((item): item is string => Boolean(item))
+
+  if (!symbol || !timeframe || price === undefined) {
+    return [
+      heading('Need this before a call'),
+      'I will not invent a live quote. Send the missing piece and I will set the bias, entry, stop, and target from it.',
+      bullets(missing),
+    ].join('\n\n')
   }
-  if (followUp) return `Follow-up received${about}. I will stay on the same study thread and go one layer deeper.`
-  return `You asked: “${asked}”${about}. Here is an educational answer, not a recommendation.`
+
+  const bias = detectBias(context, reads[0]?.slope)
+  const distance = levelDistance(symbol, price)
+  const direction = bias === 'buy' ? 1 : -1
+  const study = INSTRUMENT_STUDY[symbol]
+  const reason = study
+    ? `${study.whatMovesIt} ${instrumentSession(symbol) ?? ''}`.trim()
+    : 'The stop sits beyond a small invalidation and the target is the next measured move in the direction of the bias.'
+  const source =
+    typedPrice === undefined && live
+      ? `Entry is the TradingView close for ${live.ticker}.`
+      : ''
+
+  return [
+    heading(`${symbol} ${timeframe} call`),
+    bullets([
+      `Bias: ${bias}`,
+      `Entry: ${formatLevel(symbol, price)}`,
+      `Stop: ${formatLevel(symbol, price - direction * distance.stop)}`,
+      `Target: ${formatLevel(symbol, price + direction * distance.target)}`,
+    ]),
+    source,
+    reason,
+    bias === 'buy' && !/\b(buy|long|bullish)\b/i.test(context) && reads[0]?.slope !== 'higher to the right'
+      ? 'Working bias is buy because this message did not give a sell instruction or a chart sloping lower.'
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n\n')
+}
+
+function callSection(input: AskInput, symbols: string[], reads: ChartRead[]) {
+  const context = `${input.prompt} ${input.instrument ?? ''} ${previousUserText(input.history, input.prompt)}`
+  const targets = symbols.slice(0, 3)
+  const typedPrice = targets.length === 1 ? detectPrice(context) : undefined
+  if (!targets.length) return oneCall(input, undefined, context, reads, typedPrice)
+  return targets.map((symbol) => oneCall(input, symbol, context, reads, typedPrice)).join('\n\n')
 }
 
 async function composeReply(input: AskInput) {
   const parsed = parseQuestion(input)
   const brief = input.answerLength === 'brief'
   const reads = await inspectAttachments(input.attachments)
-  const sections: string[] = [answerLead(input.prompt, parsed.symbols, parsed.topics, parsed.followUp)]
+  const sections: string[] = [answerLead(input.prompt, parsed.symbols, parsed.followUp)]
+
+  if (marketQuestion(parsed.topics, parsed.symbols)) {
+    sections.push(callSection(input, parsed.symbols, reads))
+  }
 
   if (parsed.topics.includes('brief') && !reads.length) {
     sections.push(briefSection(parsed.symbols))
@@ -275,7 +371,7 @@ async function composeReply(input: AskInput) {
 
   if (!reads.length && uniqueSymbols.length === 0 && used.size === 0 && !parsed.topics.includes('brief')) {
     sections.push(
-      `${heading('How to study a market question')}\nStart with the product (pair or CFD), the timeframe, and the risk unit (pip, point, or dollar). Then ask what would invalidate the idea and what that distance costs at a small size. That sequence keeps you in education rather than prediction.`,
+      `${heading('How to study a market question')}\nSend the symbol, the timeframe, and the last price. The call is then bias, entry, stop, and target. Results are not guaranteed.`,
     )
   }
 
@@ -291,9 +387,19 @@ function historyWithoutDuplicate(input: AskInput) {
   return history
 }
 
+function quoteBlock(quotes: LiveQuote[] | undefined) {
+  if (!quotes?.length) return ''
+  const lines = quotes.map(
+    (item) =>
+      `${item.symbol} (${item.ticker}) ENTRY CLOSE ${item.close}. Bid ${item.bid} and ask ${item.ask} are not the entry. Change ${item.change.toFixed(2)}%.`,
+  )
+  return `TradingView live quotes. The entry for each symbol is the ENTRY CLOSE number. Do not use the bid or the ask. Do not ask for a price that is listed here.\n${lines.join('\n')}`
+}
+
 function userContent(input: AskInput, chartNote: string) {
   const images = input.attachments.filter((item) => item.kind === 'image' && item.dataUrl.length < 420_000).slice(0, 2)
   const text = [
+    quoteBlock(input.liveQuotes),
     input.instrument ? `Instrument in focus: ${input.instrument}.` : '',
     chartNote,
     input.attachments.some((item) => item.kind === 'video') ? 'A video clip was attached; treat sampled frames as a structure worksheet.' : '',
