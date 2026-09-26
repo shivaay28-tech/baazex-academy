@@ -75,14 +75,14 @@ export function LessonViewerPage() {
   const quizReady = completedIds.length >= Math.max(1, lessons.length - 1)
 
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-canvas">
+    <div className="atmosphere flex min-h-screen overflow-x-hidden">
       <Seo title={lesson.title} description={lesson.summary} />
       {sidebar ? (
-        <aside className="hidden w-[320px] shrink-0 overflow-y-auto border-r border-line bg-white p-4 lg:block">
-          <Link to={`/courses/${course.slug}`} className="text-xs font-semibold text-baazex">
+        <aside className="glass hidden w-[320px] shrink-0 overflow-y-auto border-r border-bright/15 p-4 lg:block">
+          <Link to={`/courses/${course.slug}`} className="text-xs font-semibold text-accent">
             Back to course
           </Link>
-          <h2 className="mt-3 text-sm font-bold text-navy">{course.title}</h2>
+          <h2 className="mt-3 text-sm font-bold text-ink">{course.title}</h2>
           <div className="mt-4">
             <CourseCurriculumSidebar course={course} completedIds={completedIds} currentSlug={lesson.slug} />
           </div>
@@ -90,28 +90,28 @@ export function LessonViewerPage() {
       ) : null}
 
       <div className="min-w-0 flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-line bg-white/90 px-4 py-3 backdrop-blur">
-          <button type="button" className="rounded-lg p-2 hover:bg-canvas" onClick={() => setSidebar((value) => !value)}>
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-bright/15 bg-navy/78 px-4 py-3 backdrop-blur">
+          <button type="button" className="rounded-lg p-2 hover:bg-white/8" onClick={() => setSidebar((value) => !value)}>
             {sidebar ? <PanelLeftClose className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
-          <p className="truncate text-sm font-semibold text-navy">{course.title}</p>
+          <p className="truncate text-sm font-semibold text-ink">{course.title}</p>
           <span className="text-xs text-muted">
             {(adjacent?.index ?? 0) + 1}/{adjacent?.total}
           </span>
         </div>
 
         <div className="mx-auto max-w-3xl px-4 py-8">
-          <div className="overflow-hidden rounded-3xl bg-navy">
+          <div className="overflow-hidden rounded-3xl border border-bright/20 bg-navy shadow-[inset_0_0_80px_rgb(0_163_255_/_0.12)]">
             <div className="flex aspect-video items-center justify-center bg-linear-to-br from-navy via-navy-700 to-baazex">
-              <div className="text-center text-white">
-                <p className="text-xs tracking-[0.18em] text-bright uppercase">Lesson media</p>
+              <div className="text-center text-ink">
+                <p className="text-xs tracking-[0.18em] text-ink uppercase">Lesson media</p>
                 <p className="mt-2 text-lg font-bold">{lesson.title}</p>
-                <p className="mt-1 text-xs text-white/60">{lesson.durationMinutes} minute educational module</p>
+                <p className="mt-1 text-xs text-ink/60">{lesson.durationMinutes} minute educational module</p>
               </div>
             </div>
           </div>
 
-          <h1 className="mt-6 text-3xl font-extrabold text-navy">{lesson.title}</h1>
+          <h1 className="mt-6 text-3xl font-extrabold text-ink">{lesson.title}</h1>
           <p className="mt-2 text-sm text-muted">{lesson.summary}</p>
           <div className="mt-6 space-y-4 text-sm leading-7 text-ink">
             {lesson.content.map((paragraph) => (
@@ -128,19 +128,19 @@ export function LessonViewerPage() {
             </Button>
           </div>
 
-          <section className="mt-10 rounded-2xl border border-line bg-white p-5">
-            <h2 className="font-bold text-navy">Notes</h2>
+          <section className="panel mt-10 rounded-2xl p-5">
+            <h2 className="font-bold text-ink">Notes</h2>
             <textarea
               value={note}
               onChange={(event) => setNote(event.target.value)}
               onBlur={() => user && progressService.saveNote(user.id, lesson.id, note)}
-              className="mt-3 min-h-28 w-full rounded-xl border border-line p-3 text-sm outline-none focus:border-baazex"
+              className="mt-3 min-h-28 w-full rounded-xl border border-line bg-white/5 p-3 text-sm text-ink outline-none focus:border-bright"
               placeholder="Capture definitions, questions, or items to review. Notes stay in this browser."
             />
           </section>
 
-          <section className="mt-6 rounded-2xl border border-line bg-white p-5">
-            <h2 className="font-bold text-navy">Short quiz</h2>
+          <section className="panel mt-6 rounded-2xl p-5">
+            <h2 className="font-bold text-ink">Short quiz</h2>
             <p className="mt-2 text-sm text-muted">
               When you have worked through the lessons, take the course quiz. The passing score is 70%.
             </p>

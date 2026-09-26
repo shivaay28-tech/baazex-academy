@@ -41,7 +41,7 @@ export function DashboardPage() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-muted">Welcome back</p>
-          <h1 className="text-3xl font-extrabold text-navy">{user?.fullName}</h1>
+          <h1 className="text-3xl font-extrabold text-ink">{user?.fullName}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" onClick={() => navigate('/engine')}>
@@ -61,12 +61,12 @@ export function DashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        <article className="rounded-3xl bg-navy p-6 text-white lg:col-span-2">
-          <p className="text-xs font-bold tracking-[0.16em] text-bright uppercase">Continue learning</p>
+        <article className="rounded-3xl border border-bright/25 bg-navy p-6 text-ink shadow-[inset_0_0_80px_rgb(0_163_255_/_0.12)] lg:col-span-2">
+          <p className="text-xs font-bold tracking-[0.16em] text-ink uppercase">Continue learning</p>
           {continueCourse ? (
             <>
               <h2 className="mt-2 text-2xl font-bold">{continueCourse.title}</h2>
-              <p className="mt-2 text-sm text-white/65">{continueLesson?.title ?? 'Review the course modules'}</p>
+              <p className="mt-2 text-sm text-ink/65">{continueLesson?.title ?? 'Review the course modules'}</p>
               <div className="mt-5 max-w-md">
                 <ProgressBar value={courseProgress(continueCourse.id).percent} />
               </div>
@@ -86,21 +86,21 @@ export function DashboardPage() {
           ) : (
             <>
               <h2 className="mt-2 text-2xl font-bold">Choose a course to begin</h2>
-              <p className="mt-2 text-sm text-white/65">Enrol from the catalogue to start tracking lessons and quizzes.</p>
+              <p className="mt-2 text-sm text-ink/65">Enrol from the catalogue to start tracking lessons and quizzes.</p>
               <Button className="mt-6" onClick={() => navigate('/courses')}>
                 Explore courses
               </Button>
             </>
           )}
         </article>
-        <article className="rounded-3xl border border-line bg-white p-6">
-          <h2 className="font-bold text-navy">Certificates</h2>
+        <article className="panel rounded-3xl p-6">
+          <h2 className="font-bold text-ink">Certificates</h2>
           {certificates.length ? (
             <ul className="mt-4 space-y-3">
               {certificates.map((item) => (
                 <li key={item.id}>
-                  <Link to={`/certificates/${item.id}`} className="block rounded-xl bg-canvas px-3 py-3">
-                    <p className="text-sm font-semibold text-navy">{item.courseName}</p>
+                  <Link to={`/certificates/${item.id}`} className="block rounded-xl border border-white/8 bg-white/5 px-3 py-3">
+                    <p className="text-sm font-semibold text-ink">{item.courseName}</p>
                     <p className="text-xs text-muted">{formatDate(item.completedAt)}</p>
                   </Link>
                 </li>
@@ -113,14 +113,14 @@ export function DashboardPage() {
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-2">
-        <article className="rounded-3xl border border-line bg-white p-6">
-          <h2 className="font-bold text-navy">Recent activity</h2>
+        <article className="panel rounded-3xl p-6">
+          <h2 className="font-bold text-ink">Recent activity</h2>
           <ul className="mt-4 space-y-3">
             {activity.length ? (
               activity.map((item) => (
                 <li key={item.id} className="flex items-start justify-between gap-3 border-b border-line pb-3 last:border-0">
                   <div>
-                    <p className="text-sm font-semibold text-navy">{item.label}</p>
+                    <p className="text-sm font-semibold text-ink">{item.label}</p>
                     <p className="text-xs text-muted">{item.detail}</p>
                   </div>
                   <span className="text-[11px] text-muted">{formatDate(item.at)}</span>
@@ -131,10 +131,10 @@ export function DashboardPage() {
             )}
           </ul>
         </article>
-        <article className="rounded-3xl border border-line bg-white p-6">
+        <article className="panel rounded-3xl p-6">
           <div className="flex items-center justify-between">
-            <h2 className="font-bold text-navy">Recommended courses</h2>
-            <Link to="/courses" className="text-sm font-semibold text-baazex">
+            <h2 className="font-bold text-ink">Recommended courses</h2>
+            <Link to="/courses" className="text-sm font-semibold text-accent">
               View all
             </Link>
           </div>

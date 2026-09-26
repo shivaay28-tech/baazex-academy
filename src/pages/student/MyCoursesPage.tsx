@@ -28,14 +28,14 @@ export function MyCoursesPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
       <Seo title="My courses" description="Courses you have enrolled in or saved on Baazex Academy." />
-      <h1 className="text-3xl font-extrabold text-navy">My courses</h1>
+      <h1 className="text-3xl font-extrabold text-ink">My courses</h1>
       <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto">
         {tabs.map((item) => (
           <button
             key={item}
             type="button"
             onClick={() => setTab(item)}
-            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${tab === item ? 'bg-navy text-white' : 'bg-white text-muted'}`}
+            className={`shrink-0 rounded-full px-4 py-2 text-sm font-semibold ${tab === item ? 'bg-baazex text-ink shadow-float' : 'border border-white/10 bg-white/5 text-muted'}`}
           >
             {item}
           </button>
@@ -54,7 +54,7 @@ export function MyCoursesPage() {
             title="Nothing in this list yet"
             description="Enrol from the catalogue or save a course to see it here."
             action={
-              <Link to="/courses" className="rounded-xl bg-baazex px-4 py-2 text-sm font-semibold text-white">
+              <Link to="/courses" className="rounded-xl bg-baazex px-4 py-2 text-sm font-semibold text-ink">
                 Browse courses
               </Link>
             }

@@ -16,12 +16,12 @@ export function CertificatesPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
       <Seo title="Certificates" description="Sample completion certificates issued by Baazex Academy." />
-      <h1 className="text-3xl font-extrabold text-navy">Certificates</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Certificates</h1>
       {records.length ? (
         <div className="mt-6 grid gap-4">
           {records.map((item) => (
-            <Link key={item.id} to={`/certificates/${item.id}`} className="rounded-2xl border border-line bg-white p-5 hover:border-baazex/30">
-              <p className="text-sm font-bold text-navy">{item.courseName}</p>
+            <Link key={item.id} to={`/certificates/${item.id}`} className="rounded-2xl panel p-5 hover:border-baazex/30">
+              <p className="text-sm font-bold text-ink">{item.courseName}</p>
               <p className="mt-1 text-xs text-muted">
                 {item.id} · {formatDateLong(item.completedAt)}
               </p>
@@ -60,26 +60,26 @@ export function CertificatePage() {
         </Button>
         <Button onClick={() => window.print()}>Download certificate</Button>
       </div>
-      <article className="print-certificate relative overflow-hidden rounded-[28px] border-4 border-navy bg-white p-8 sm:p-12">
+      <article className="print-certificate relative overflow-hidden rounded-[28px] border-4 border-[#10203a] bg-[#f6f8fc] p-8 text-[#10203a] sm:p-12">
         <div className="absolute inset-3 rounded-[22px] border border-baazex/30" />
         <div className="relative text-center">
           <div className="flex justify-center">
             <Logo />
           </div>
-          <p className="mt-8 text-xs font-bold tracking-[0.28em] text-baazex uppercase">Certificate of completion</p>
-          <h1 className="mt-4 font-serif text-4xl text-navy sm:text-5xl">Baazex Academy</h1>
+          <p className="mt-8 text-xs font-bold tracking-[0.28em] text-accent uppercase">Certificate of completion</p>
+          <h1 className="mt-4 font-serif text-4xl text-ink sm:text-5xl">Baazex Academy</h1>
           <p className="mt-8 text-sm text-muted">This is to certify that</p>
-          <p className="mt-2 font-serif text-3xl text-navy">{record.studentName}</p>
+          <p className="mt-2 font-serif text-3xl text-ink">{record.studentName}</p>
           <p className="mt-6 text-sm text-muted">has completed the educational course</p>
-          <p className="mt-2 text-xl font-bold text-navy">{record.courseName}</p>
+          <p className="mt-2 text-xl font-bold text-ink">{record.courseName}</p>
           <div className="mx-auto mt-10 grid max-w-lg gap-6 text-left sm:grid-cols-2">
             <div>
               <p className="text-[11px] tracking-[0.16em] text-muted uppercase">Completion date</p>
-              <p className="mt-1 font-semibold text-navy">{formatDateLong(record.completedAt)}</p>
+              <p className="mt-1 font-semibold text-ink">{formatDateLong(record.completedAt)}</p>
             </div>
             <div>
               <p className="text-[11px] tracking-[0.16em] text-muted uppercase">Certificate ID</p>
-              <p className="mt-1 font-semibold text-navy">{record.id}</p>
+              <p className="mt-1 font-semibold text-ink">{record.id}</p>
             </div>
           </div>
           <p className="mx-auto mt-10 max-w-xl text-[11px] leading-relaxed text-muted">{DISCLAIMER}</p>

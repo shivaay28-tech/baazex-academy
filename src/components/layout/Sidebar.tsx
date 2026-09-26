@@ -55,7 +55,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-white/10 bg-navy text-white transition-all duration-200',
+        'flex h-full flex-col border-r border-bright/15 bg-navy/90 text-ink shadow-[inset_-1px_0_0_rgb(92_225_255_/_0.12)] backdrop-blur-xl transition-all duration-200',
         collapsed ? 'w-[76px]' : 'w-[280px]',
       )}
     >
@@ -66,7 +66,7 @@ export function Sidebar({
         <button
           type="button"
           onClick={onToggle}
-          className="rounded-lg p-1.5 text-white/60 hover:bg-white/10 hover:text-white"
+          className="rounded-lg p-1.5 text-ink/60 hover:bg-white/10 hover:text-ink"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -81,15 +81,15 @@ export function Sidebar({
             className="flex h-11 w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold hover:bg-white/10"
           >
             {admin ? 'Manage catalogue' : 'Continue learning'}
-            <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-white/50">⌘K</span>
+            <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-ink/50">⌘K</span>
           </button>
-          <label className="mt-3 flex h-10 items-center gap-2 rounded-xl bg-white/5 px-3 text-white/50">
+          <label className="mt-3 flex h-10 items-center gap-2 rounded-xl bg-white/70 px-3 text-ink/50">
             <Search className="h-4 w-4 shrink-0" />
             <input
               value={query}
               onChange={(event) => onQuery(event.target.value)}
               placeholder={admin ? 'Search admin' : 'Search courses'}
-              className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+              className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-ink/35"
             />
           </label>
         </div>
@@ -104,7 +104,7 @@ export function Sidebar({
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold',
-                isActive ? 'bg-baazex text-white' : 'text-white/70 hover:bg-white/8 hover:text-white',
+                isActive ? 'bg-baazex text-ink' : 'text-ink/70 hover:bg-white/8 hover:text-ink',
                 collapsed && 'justify-center px-0',
               )
             }
@@ -116,29 +116,29 @@ export function Sidebar({
 
         {!admin && !collapsed ? (
           <>
-            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-white/35 uppercase">Recent</p>
+            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-ink/35 uppercase">Recent</p>
             <div className="mt-2 space-y-1">
               {recent.length ? (
                 recent.map((course) => (
                   <NavLink
                     key={course.id}
                     to={`/courses/${course.slug}`}
-                    className="block truncate rounded-lg px-3 py-2 text-xs text-white/65 hover:bg-white/8 hover:text-white"
+                    className="block truncate rounded-lg px-3 py-2 text-xs text-ink/65 hover:bg-white/8 hover:text-ink"
                   >
                     {course.title}
                   </NavLink>
                 ))
               ) : (
-                <p className="px-3 text-xs text-white/40">No enrolments yet.</p>
+                <p className="px-3 text-xs text-ink/40">No enrolments yet.</p>
               )}
             </div>
-            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-white/35 uppercase">Categories</p>
+            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-ink/35 uppercase">Categories</p>
             <div className="mt-2 flex flex-wrap gap-1.5 px-2">
               {categories.slice(0, 6).map((category) => (
                 <NavLink
                   key={category.id}
                   to={`/categories/${category.slug}`}
-                  className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-white/70 hover:border-bright/40 hover:text-white"
+                  className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-ink/70 hover:border-bright/40 hover:text-ink"
                 >
                   {category.name.split(' ')[0]}
                 </NavLink>
@@ -156,7 +156,7 @@ export function Sidebar({
           {collapsed ? null : (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{user?.fullName}</p>
-              <p className="truncate text-[11px] text-white/45">{user?.email}</p>
+              <p className="truncate text-[11px] text-ink/45">{user?.email}</p>
             </div>
           )}
         </div>
@@ -167,7 +167,7 @@ export function Sidebar({
             navigate('/')
           }}
           className={cn(
-            'mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-white/60 hover:bg-white/8 hover:text-white',
+            'mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-ink/60 hover:bg-white/8 hover:text-ink',
             collapsed && 'justify-center',
           )}
         >

@@ -6,13 +6,13 @@ type Size = 'sm' | 'md' | 'lg'
 
 const variants: Record<Variant, string> = {
   primary:
-    'bg-baazex text-white shadow-float hover:bg-baazex-600 disabled:bg-baazex/50',
+    'bg-baazex text-ink shadow-float hover:bg-baazex-600 disabled:bg-baazex/50',
   secondary:
-    'bg-white text-navy border border-line hover:border-baazex/40 hover:text-baazex',
-  ghost: 'bg-transparent text-ink hover:bg-white/70',
-  outline: 'border border-white/20 bg-white/5 text-white hover:bg-white/10',
+    'border border-bright/25 bg-white/5 text-ink hover:border-bright/50 hover:text-accent',
+  ghost: 'bg-transparent text-ink hover:bg-white/10',
+  outline: 'border border-ink/20 bg-white/50 text-ink hover:bg-white',
   danger: 'bg-danger text-white hover:bg-danger/90',
-  navy: 'bg-navy text-white hover:bg-navy-700',
+  navy: 'border border-bright/20 bg-navy text-ink hover:border-bright/40 hover:bg-navy-700',
 }
 
 const sizes: Record<Size, string> = {

@@ -30,8 +30,8 @@ export function CoursesPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <Seo title="Courses" description="Browse Baazex Academy courses on forex, CFDs, analysis, risk, MetaTrader 5, and introducing broker education." />
-      <p className="text-xs font-bold tracking-[0.18em] text-baazex uppercase">Catalogue</p>
-      <h1 className="mt-2 text-4xl font-extrabold text-navy">Course listing</h1>
+      <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">Catalogue</p>
+      <h1 className="mt-2 text-4xl font-extrabold text-ink">Course listing</h1>
       <p className="mt-3 max-w-2xl text-sm text-muted">
         Filter by category and level. Enrolment, progress, and quizzes are stored locally in this demonstration environment.
       </p>

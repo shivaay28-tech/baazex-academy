@@ -56,15 +56,15 @@ export function ProfilePage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
       <Seo title="Profile and settings" description="Manage your Baazex Academy profile, password, and notification preferences." />
-      <h1 className="text-3xl font-extrabold text-navy">Profile and settings</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Profile and settings</h1>
 
-      <section className="mt-8 rounded-3xl border border-line bg-white p-6">
+      <section className="mt-8 rounded-3xl panel p-6">
         <div className="flex items-center gap-4">
-          <span className="grid h-16 w-16 place-items-center rounded-full bg-navy text-lg font-bold text-white">
+          <span className="grid h-16 w-16 place-items-center rounded-full bg-navy text-lg font-bold text-ink">
             {initials(fullName)}
           </span>
           <div>
-            <p className="font-bold text-navy">Profile photo</p>
+            <p className="font-bold text-ink">Profile photo</p>
             <p className="text-sm text-muted">A placeholder mark is used until media uploads are connected to the API.</p>
           </div>
         </div>
@@ -84,8 +84,8 @@ export function ProfilePage() {
         </Button>
       </section>
 
-      <section className="mt-6 rounded-3xl border border-line bg-white p-6">
-        <h2 className="font-bold text-navy">Change password</h2>
+      <section className="mt-6 rounded-3xl panel p-6">
+        <h2 className="font-bold text-ink">Change password</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <Input label="Current password" type="password" value={currentPassword} onChange={(event) => setCurrentPassword(event.target.value)} />
           <Input label="New password" type="password" value={nextPassword} onChange={(event) => setNextPassword(event.target.value)} />
@@ -95,8 +95,8 @@ export function ProfilePage() {
         </Button>
       </section>
 
-      <section className="mt-6 rounded-3xl border border-line bg-white p-6">
-        <h2 className="font-bold text-navy">Email and course notifications</h2>
+      <section className="mt-6 rounded-3xl panel p-6">
+        <h2 className="font-bold text-ink">Email and course notifications</h2>
         <div className="mt-4 space-y-3">
           {(
             [
@@ -105,8 +105,8 @@ export function ProfilePage() {
               ['weeklyDigest', 'Weekly learning digest'],
             ] as const
           ).map(([key, label]) => (
-            <label key={key} className="flex items-center justify-between gap-4 rounded-xl bg-canvas px-4 py-3 text-sm">
-              <span className="font-medium text-navy">{label}</span>
+            <label key={key} className="flex items-center justify-between gap-4 rounded-xl border border-white/8 bg-white/5 px-4 py-3 text-sm">
+              <span className="font-medium text-ink">{label}</span>
               <input
                 type="checkbox"
                 checked={prefs[key]}

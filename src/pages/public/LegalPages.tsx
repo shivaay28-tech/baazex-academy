@@ -5,7 +5,7 @@ export function TermsPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <Seo title="Terms of use" description="Terms of use for Baazex Academy educational content." />
-      <h1 className="text-4xl font-extrabold text-navy">Terms of use</h1>
+      <h1 className="text-4xl font-extrabold text-ink">Terms of use</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted">
         Baazex Academy is an educational service of {COMPANY_NAME}. By creating an account you confirm that you are 18 or older and that you understand the content is for learning only.
       </p>
@@ -23,7 +23,7 @@ export function PrivacyPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6">
       <Seo title="Privacy policy" description="How Baazex Academy handles account information in this educational demonstration." />
-      <h1 className="text-4xl font-extrabold text-navy">Privacy policy</h1>
+      <h1 className="text-4xl font-extrabold text-ink">Privacy policy</h1>
       <p className="mt-4 text-sm leading-relaxed text-muted">
         In this demonstration, registration details and learning progress are stored locally in your browser using localStorage. When a production API is connected, those records will move to secured servers operated by {COMPANY_NAME}.
       </p>

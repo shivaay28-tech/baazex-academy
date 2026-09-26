@@ -68,8 +68,8 @@ export function RegisterPage() {
   return (
     <div>
       <Seo title="Create account" description="Register for a free Baazex Academy learning account." />
-      <p className="text-xs font-bold tracking-[0.18em] text-baazex uppercase">New student</p>
-      <h1 className="mt-2 text-3xl font-extrabold text-navy">Create your account</h1>
+      <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">New student</p>
+      <h1 className="mt-2 text-3xl font-extrabold text-ink">Create your account</h1>
       <p className="mt-2 text-sm text-muted">One Academy login stores your enrolments, notes, quizzes, and certificates in this demo.</p>
       <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
         <Input label="Full name" name="fullName" value={fullName} onChange={(event) => setFullName(event.target.value)} error={errors.fullName} autoComplete="name" />
@@ -97,11 +97,11 @@ export function RegisterPage() {
           <input type="checkbox" className="mt-1" checked={terms} onChange={(event) => setTerms(event.target.checked)} />
           <span>
             I accept the{' '}
-            <Link to="/terms" className="font-semibold text-baazex">
+            <Link to="/terms" className="font-semibold text-accent">
               Terms of use
             </Link>{' '}
             and{' '}
-            <Link to="/privacy" className="font-semibold text-baazex">
+            <Link to="/privacy" className="font-semibold text-accent">
               Privacy policy
             </Link>
             , and I understand that Academy content is educational only.
@@ -115,7 +115,7 @@ export function RegisterPage() {
       </form>
       <p className="mt-4 text-sm text-muted">
         Already registered?{' '}
-        <Link to="/login" className="font-semibold text-baazex">
+        <Link to="/login" className="font-semibold text-accent">
           Sign in
         </Link>
       </p>

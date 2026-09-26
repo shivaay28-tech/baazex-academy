@@ -23,13 +23,13 @@ export function LessonList({
   return (
     <div className="space-y-3">
       {course.modules.map((module) => (
-        <div key={module.id} className="overflow-hidden rounded-2xl border border-line bg-white">
+        <div key={module.id} className="panel overflow-hidden rounded-2xl">
           <button
             type="button"
             className="flex w-full items-center justify-between px-4 py-3 text-left"
             onClick={() => setOpen((current) => ({ ...current, [module.id]: !current[module.id] }))}
           >
-            <span className="text-sm font-bold text-navy">{module.title}</span>
+            <span className="text-sm font-bold text-ink">{module.title}</span>
             <ChevronDown className={cn('h-4 w-4 text-muted transition', open[module.id] ? 'rotate-180' : '')} />
           </button>
           {open[module.id] ? (
@@ -70,13 +70,13 @@ function LessonRow({
       <span
         className={cn(
           'grid h-7 w-7 place-items-center rounded-full text-[11px]',
-          completed ? 'bg-success/10 text-success' : current ? 'bg-baazex text-white' : 'bg-canvas text-muted',
+          completed ? 'bg-success/10 text-success' : current ? 'bg-baazex text-ink' : 'border border-white/10 bg-white/5 text-muted',
         )}
       >
         {completed ? <Check className="h-3.5 w-3.5" /> : enrolled ? lesson.order : <Lock className="h-3.5 w-3.5" />}
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate text-sm font-semibold text-navy">{lesson.title}</span>
+        <span className="block truncate text-sm font-semibold text-ink">{lesson.title}</span>
         <span className="text-xs text-muted">{lesson.durationMinutes} min</span>
       </span>
     </span>
@@ -87,7 +87,7 @@ function LessonRow({
   }
 
   return (
-    <li className={cn(current && 'bg-canvas')}>
+    <li className={cn(current && 'bg-white/5')}>
       <Link to={`/learn/${courseSlug}/${lesson.slug}`}>{inner}</Link>
     </li>
   )

@@ -21,7 +21,7 @@ export function QuizQuestion({
       <legend className="text-sm font-semibold text-muted">
         Question {index + 1} of {total}
       </legend>
-      <h2 className="mt-2 text-xl font-bold text-navy">{question.prompt}</h2>
+      <h2 className="mt-2 text-xl font-bold text-ink">{question.prompt}</h2>
       <div className="mt-5 space-y-2">
         {question.options.map((option) => {
           const isSelected = selected === option.id
@@ -51,7 +51,7 @@ export function QuizQuestion({
           )
         })}
       </div>
-      {revealed ? <p className="mt-4 rounded-xl bg-canvas p-3 text-sm text-muted">{question.explanation}</p> : null}
+      {revealed ? <p className="mt-4 rounded-xl border border-white/8 bg-white/5 p-3 text-sm text-muted">{question.explanation}</p> : null}
     </fieldset>
   )
 }

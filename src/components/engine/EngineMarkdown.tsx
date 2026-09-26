@@ -4,14 +4,14 @@ export function EngineMarkdown({ text, caret = false }: { text: string; caret?: 
   const blocks = text.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean)
 
   return (
-    <div className={`space-y-3 text-sm leading-7 text-white/85 ${caret ? 'engine-caret' : ''}`}>
-      {blocks.length === 0 && caret ? <p className="text-white/40">Thinking…</p> : null}
+    <div className={`space-y-3 text-sm leading-7 text-ink ${caret ? 'engine-caret' : ''}`}>
+      {blocks.length === 0 && caret ? <p className="text-muted">Thinking…</p> : null}
       {blocks.map((block, index) => {
         const lines = block.split('\n')
         if (/^#{1,3}\s+/.test(block)) {
           const title = block.replace(/^#{1,3}\s+/, '')
           return (
-            <p key={index} className="font-bold text-white">
+            <p key={index} className="font-bold text-ink">
               {inline(title)}
             </p>
           )
@@ -39,7 +39,7 @@ export function EngineMarkdown({ text, caret = false }: { text: string; caret?: 
         if (block.startsWith('```')) {
           const code = block.replace(/^```[a-zA-Z]*\n?/, '').replace(/```$/, '')
           return (
-            <pre key={index} className="overflow-x-auto rounded-xl bg-black/40 p-3 text-xs text-bright/90">
+            <pre key={index} className="overflow-x-auto rounded-xl bg-baazex/5 p-3 text-xs text-accent/90">
               {code}
             </pre>
           )
@@ -64,13 +64,13 @@ function inline(text: string) {
     if (match.index > last) parts.push(text.slice(last, match.index))
     if (match[2]) {
       parts.push(
-        <strong key={key} className="font-bold text-white">
+        <strong key={key} className="font-bold text-ink">
           {match[2]}
         </strong>,
       )
     } else {
       parts.push(
-        <code key={key} className="rounded bg-white/10 px-1 text-[12px] text-bright">
+        <code key={key} className="rounded bg-baazex/10 px-1 text-[12px] text-accent">
           {match[3]}
         </code>,
       )

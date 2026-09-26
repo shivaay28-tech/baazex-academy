@@ -12,8 +12,8 @@ export function LoadingSkeleton({ className, lines = 3 }: { className?: string; 
 
 export function CourseCardSkeleton() {
   return (
-    <div className="animate-pulse rounded-2xl border border-line bg-white p-5">
-      <div className="h-24 rounded-xl bg-canvas" />
+    <div className="panel animate-pulse rounded-2xl p-5">
+      <div className="h-24 rounded-xl bg-white/6" />
       <div className="mt-4 h-4 w-2/3 rounded bg-line" />
       <div className="mt-2 h-3 w-full rounded bg-line/80" />
       <div className="mt-2 h-3 w-5/6 rounded bg-line/70" />

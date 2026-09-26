@@ -33,8 +33,8 @@ export function LearningPathPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
       <Seo title="Learning path" description="A suggested Baazex Academy sequence from forex foundations to analysis, risk, and partner education." />
-      <p className="text-xs font-bold tracking-[0.18em] text-baazex uppercase">Suggested sequence</p>
-      <h1 className="mt-2 text-4xl font-extrabold text-navy">Learning path</h1>
+      <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">Suggested sequence</p>
+      <h1 className="mt-2 text-4xl font-extrabold text-ink">Learning path</h1>
       <p className="mt-3 max-w-2xl text-sm text-muted">
         This path is a study recommendation, not a requirement. You can enrol in any published course at any time.
       </p>
@@ -43,10 +43,10 @@ export function LearningPathPage() {
           <section key={stage.title}>
             <div className="mb-5 flex items-end justify-between gap-4">
               <div>
-                <h2 className="text-2xl font-bold text-navy">{stage.title}</h2>
+                <h2 className="text-2xl font-bold text-ink">{stage.title}</h2>
                 <p className="mt-1 max-w-2xl text-sm text-muted">{stage.text}</p>
               </div>
-              <ArrowRight className="hidden h-5 w-5 text-baazex sm:block" />
+              <ArrowRight className="hidden h-5 w-5 text-accent sm:block" />
             </div>
             <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {stage.slugs.map((slug) => {
@@ -58,7 +58,7 @@ export function LearningPathPage() {
         ))}
       </div>
       <p className="mt-10 text-sm">
-        Prefer a full catalogue view? <Link to="/courses" className="font-semibold text-baazex">Browse all courses</Link>
+        Prefer a full catalogue view? <Link to="/courses" className="font-semibold text-accent">Browse all courses</Link>
       </p>
     </div>
   )

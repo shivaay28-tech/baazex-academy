@@ -27,8 +27,8 @@ export function CourseDetailsPage() {
   if (!course) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <h1 className="text-2xl font-bold text-navy">Course not found</h1>
-        <Link to="/courses" className="mt-4 inline-block text-sm font-semibold text-baazex">
+        <h1 className="text-2xl font-bold text-ink">Course not found</h1>
+        <Link to="/courses" className="mt-4 inline-block text-sm font-semibold text-accent">
           Back to courses
         </Link>
       </div>
@@ -63,8 +63,8 @@ export function CourseDetailsPage() {
       <Seo title={course.title} description={course.description} />
       <div className="grid gap-8 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <p className="text-xs font-bold tracking-[0.16em] text-baazex uppercase">{category?.name}</p>
-          <h1 className="mt-2 text-4xl font-extrabold text-navy">{course.title}</h1>
+          <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">{category?.name}</p>
+          <h1 className="mt-2 text-4xl font-extrabold text-ink">{course.title}</h1>
           <p className="mt-3 text-base text-muted">{course.description}</p>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-muted">
             <DifficultyBadge level={course.difficulty} />
@@ -80,16 +80,16 @@ export function CourseDetailsPage() {
           </div>
 
           {enrolled ? (
-            <div className="mt-6 rounded-2xl border border-line bg-white p-4">
+            <div className="mt-6 rounded-2xl panel p-4">
               <ProgressBar value={progress.percent} label="Your progress" />
             </div>
           ) : null}
 
           <section className="mt-10">
-            <h2 className="text-xl font-bold text-navy">Course objectives</h2>
+            <h2 className="text-xl font-bold text-ink">Course objectives</h2>
             <ul className="mt-4 space-y-2">
               {course.objectives.map((objective) => (
-                <li key={objective} className="rounded-xl bg-white px-4 py-3 text-sm text-ink">
+                <li key={objective} className="panel rounded-xl px-4 py-3 text-sm text-ink">
                   {objective}
                 </li>
               ))}
@@ -97,21 +97,21 @@ export function CourseDetailsPage() {
           </section>
 
           <section className="mt-10">
-            <h2 className="text-xl font-bold text-navy">Lessons and modules</h2>
+            <h2 className="text-xl font-bold text-ink">Lessons and modules</h2>
             <div className="mt-4">
               <LessonList course={course} completedIds={completedIds} enrolled={enrolled} />
             </div>
           </section>
 
-          <div className="mt-8 rounded-2xl border border-line bg-white p-5">
+          <div className="mt-8 rounded-2xl panel p-5">
             <Disclaimer />
           </div>
         </div>
 
         <aside className="lg:col-span-4">
-          <div className="sticky top-24 rounded-3xl border border-line bg-white p-6 shadow-card">
+          <div className="sticky top-24 rounded-3xl panel p-6 shadow-card">
             <p className="text-sm font-semibold text-muted">Educational enrolment</p>
-            <p className="mt-1 text-2xl font-extrabold text-navy">Free in this demo</p>
+            <p className="mt-1 text-2xl font-extrabold text-ink">Free in this demo</p>
             <p className="mt-2 text-sm text-muted">
               Enrolment stores progress locally so a future API or CRM can replace the mock service.
             </p>
@@ -143,7 +143,7 @@ export function CourseDetailsPage() {
               </Button>
             </div>
             {enrolled ? (
-              <Link to={`/quiz/${course.slug}/${course.quizId}`} className="mt-4 block text-center text-sm font-semibold text-baazex">
+              <Link to={`/quiz/${course.slug}/${course.quizId}`} className="mt-4 block text-center text-sm font-semibold text-accent">
                 Open course quiz
               </Link>
             ) : null}

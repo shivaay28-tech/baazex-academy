@@ -17,19 +17,19 @@ export function StudentLayout() {
     : []
 
   return (
-    <div className="flex h-screen overflow-hidden bg-canvas">
+    <div className="atmosphere flex h-screen overflow-hidden">
       <div className="hidden md:block">
         <Sidebar collapsed={!isDesktop || collapsed} onToggle={() => setCollapsed((value) => !value)} query={query} onQuery={setQuery} />
       </div>
       <div className="relative min-w-0 flex-1 overflow-y-auto pb-20 md:pb-0">
         {query ? (
-          <div className="absolute top-3 right-3 left-3 z-20 rounded-2xl border border-line bg-white p-3 shadow-card md:left-auto md:w-80">
+          <div className="glass absolute top-3 right-3 left-3 z-20 rounded-2xl p-3 md:left-auto md:w-80">
             {filtered.length ? (
               filtered.slice(0, 6).map((course) => (
                 <button
                   type="button"
                   key={course.id}
-                  className="block w-full rounded-lg px-3 py-2 text-left text-sm hover:bg-canvas"
+                  className="block w-full rounded-lg px-3 py-2 text-left text-sm text-ink hover:bg-white/8"
                   onClick={() => {
                     setQuery('')
                     navigate(`/courses/${course.slug}`)

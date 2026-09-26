@@ -19,7 +19,7 @@ export function ProgressBar({
         </div>
       ) : null}
       <div
-        className={cn('overflow-hidden rounded-full bg-line/80', size === 'sm' ? 'h-1.5' : 'h-2.5')}
+        className={cn('overflow-hidden rounded-full bg-baazex/15', size === 'sm' ? 'h-1.5' : 'h-2.5')}
         role="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}

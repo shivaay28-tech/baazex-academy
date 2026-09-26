@@ -67,20 +67,20 @@ export function QuizPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">
       <Seo title={quiz.title} description={`Knowledge check for ${course.title}. Passing score ${PASSING_SCORE}%.`} />
-      <Link to={`/courses/${course.slug}`} className="text-sm font-semibold text-baazex">
+      <Link to={`/courses/${course.slug}`} className="text-sm font-semibold text-accent">
         Back to course
       </Link>
-      <h1 className="mt-3 text-3xl font-extrabold text-navy">{quiz.title}</h1>
+      <h1 className="mt-3 text-3xl font-extrabold text-ink">{quiz.title}</h1>
       <p className="mt-2 text-sm text-muted">Select one answer per question. Passing score: {PASSING_SCORE}%.</p>
       <div className="mt-6">
         <ProgressBar value={Math.round((answeredCount / quiz.questions.length) * 100)} label="Answered" />
       </div>
 
-      <div className="mt-8 rounded-3xl border border-line bg-white p-6">
+      <div className="mt-8 rounded-3xl panel p-6">
         {submitted ? (
           <div>
-            <p className="text-xs font-bold tracking-[0.16em] text-baazex uppercase">Result</p>
-            <h2 className="mt-2 text-4xl font-extrabold text-navy">{score}%</h2>
+            <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">Result</p>
+            <h2 className="mt-2 text-4xl font-extrabold text-ink">{score}%</h2>
             <p className="mt-2 text-sm text-muted">
               {score >= PASSING_SCORE
                 ? 'You passed this knowledge check. If every lesson is complete, a sample certificate is issued.'

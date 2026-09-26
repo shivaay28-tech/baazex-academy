@@ -34,7 +34,7 @@ export function ForgotPasswordPage() {
   return (
     <div>
       <Seo title="Forgot password" description="Request a Baazex Academy password reset." />
-      <h1 className="text-3xl font-extrabold text-navy">Forgot password</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Forgot password</h1>
       <p className="mt-2 text-sm text-muted">Enter your email. In this demo, a reset token is generated locally instead of sending mail.</p>
       <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
         <Input label="Email address" type="email" value={email} onChange={(event) => setEmail(event.target.value)} error={error} />
@@ -43,7 +43,7 @@ export function ForgotPasswordPage() {
         </Button>
       </form>
       {message ? <p className="mt-4 text-sm text-muted">{message}</p> : null}
-      <Link to="/login" className="mt-6 inline-block text-sm font-semibold text-baazex">
+      <Link to="/login" className="mt-6 inline-block text-sm font-semibold text-accent">
         Back to sign in
       </Link>
     </div>
@@ -85,7 +85,7 @@ export function ResetPasswordPage() {
   return (
     <div>
       <Seo title="Reset password" description="Choose a new Baazex Academy password." />
-      <h1 className="text-3xl font-extrabold text-navy">Reset password</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Reset password</h1>
       <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
         <Input label="Reset token" value={token} onChange={(event) => setToken(event.target.value)} />
         <Input label="New password" type="password" value={password} onChange={(event) => setPassword(event.target.value)} />

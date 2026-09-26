@@ -26,7 +26,7 @@ export function AdminDashboardPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Seo title="Admin dashboard" description="Baazex Academy administration overview." />
-      <h1 className="text-3xl font-extrabold text-navy">Admin dashboard</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Admin dashboard</h1>
       <p className="mt-2 text-sm text-muted">Sample operations data. Connect REST endpoints through `src/services` when the API is ready.</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <DashboardStatCard label="Published courses" value={courses.filter((item) => item.status === 'published').length} icon={BookOpen} />
@@ -74,12 +74,12 @@ export function AdminCoursesPage() {
         <tbody>
           {filtered.map((course) => (
             <tr key={course.id} className="border-t border-line">
-              <td className="px-3 py-3 font-semibold text-navy">{course.title}</td>
+              <td className="px-3 py-3 font-semibold text-ink">{course.title}</td>
               <td className="px-3 py-3">{course.difficulty}</td>
               <td className="px-3 py-3">{getLessonCount(course)}</td>
               <td className="px-3 py-3">{course.status}</td>
               <td className="px-3 py-3 text-right">
-                <button type="button" className="mr-2 text-baazex" onClick={() => setEditing(course)} aria-label={`Edit ${course.title}`}>
+                <button type="button" className="mr-2 text-accent" onClick={() => setEditing(course)} aria-label={`Edit ${course.title}`}>
                   <Pencil className="inline h-4 w-4" />
                 </button>
                 <button
@@ -107,7 +107,7 @@ export function AdminCoursesPage() {
             <label className="block text-sm font-semibold text-ink">
               Description
               <textarea
-                className="mt-1.5 min-h-24 w-full rounded-xl border border-line p-3 text-sm font-normal"
+                className="mt-1.5 min-h-24 w-full rounded-xl border border-line bg-white/5 p-3 text-sm font-normal text-ink"
                 value={editing.description}
                 onChange={(event) => setEditing({ ...editing, description: event.target.value })}
               />
@@ -167,7 +167,7 @@ export function AdminModulesPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Seo title="Manage modules" description="Create and review course modules." />
-      <h1 className="text-3xl font-extrabold text-navy">Manage modules</h1>
+      <h1 className="text-3xl font-extrabold text-ink">Manage modules</h1>
       <div className="mt-6 max-w-sm">
         <Select
           label="Course"
@@ -186,8 +186,8 @@ export function AdminModulesPage() {
       </div>
       <div className="mt-6 grid gap-3">
         {course?.modules.map((module) => (
-          <article key={module.id} className="rounded-2xl border border-line bg-white p-4">
-            <p className="font-bold text-navy">{module.title}</p>
+          <article key={module.id} className="rounded-2xl panel p-4">
+            <p className="font-bold text-ink">{module.title}</p>
             <p className="text-sm text-muted">{module.lessons.length} lessons</p>
           </article>
         ))}
@@ -254,7 +254,7 @@ export function AdminLessonsPage() {
         <tbody>
           {rows.map((row) => (
             <tr key={row.lesson.id} className="border-t border-line">
-              <td className="px-3 py-3 font-semibold text-navy">{row.lesson.title}</td>
+              <td className="px-3 py-3 font-semibold text-ink">{row.lesson.title}</td>
               <td className="px-3 py-3">{row.course.title}</td>
               <td className="px-3 py-3">{row.lesson.durationMinutes} min</td>
             </tr>
@@ -286,7 +286,7 @@ export function AdminStudentsPage() {
         <tbody>
           {students.map((user) => (
             <tr key={user.id} className="border-t border-line">
-              <td className="px-3 py-3 font-semibold text-navy">{user.fullName}</td>
+              <td className="px-3 py-3 font-semibold text-ink">{user.fullName}</td>
               <td className="px-3 py-3">{user.email}</td>
               <td className="px-3 py-3">{user.country}</td>
               <td className="px-3 py-3">{user.role}</td>
@@ -305,8 +305,8 @@ export function AdminQuizzesPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Seo title="Quiz management" description="Review Academy knowledge checks." />
-      <h1 className="text-3xl font-extrabold text-navy">Quiz management</h1>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white">
+      <h1 className="text-3xl font-extrabold text-ink">Quiz management</h1>
+      <div className="mt-6 overflow-x-auto rounded-2xl panel">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="text-xs text-muted uppercase">
             <tr>
@@ -319,7 +319,7 @@ export function AdminQuizzesPage() {
           <tbody>
             {quizzes.map((quiz) => (
               <tr key={quiz.id} className="border-t border-line">
-                <td className="px-3 py-3 font-semibold text-navy">{quiz.title}</td>
+                <td className="px-3 py-3 font-semibold text-ink">{quiz.title}</td>
                 <td className="px-3 py-3">{courses.find((course) => course.id === quiz.courseId)?.title}</td>
                 <td className="px-3 py-3">{quiz.questions.length}</td>
                 <td className="px-3 py-3">{quiz.passingScore}%</td>
@@ -337,8 +337,8 @@ export function AdminCertificatesPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Seo title="Certificate management" description="Issued educational certificates." />
-      <h1 className="text-3xl font-extrabold text-navy">Certificate management</h1>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white">
+      <h1 className="text-3xl font-extrabold text-ink">Certificate management</h1>
+      <div className="mt-6 overflow-x-auto rounded-2xl panel">
         {records.length ? (
           <table className="w-full min-w-[720px] text-left text-sm">
             <thead className="text-xs text-muted uppercase">
@@ -352,7 +352,7 @@ export function AdminCertificatesPage() {
             <tbody>
               {records.map((item) => (
                 <tr key={item.id} className="border-t border-line">
-                  <td className="px-3 py-3 font-semibold text-navy">{item.id}</td>
+                  <td className="px-3 py-3 font-semibold text-ink">{item.id}</td>
                   <td className="px-3 py-3">{item.studentName}</td>
                   <td className="px-3 py-3">{item.courseName}</td>
                   <td className="px-3 py-3">{formatDate(item.completedAt)}</td>
@@ -377,8 +377,8 @@ export function AdminReportsPage() {
   return (
     <div className="px-4 py-8 sm:px-6">
       <Seo title="Reports" description="Enrolment and completion reports for Baazex Academy." />
-      <h1 className="text-3xl font-extrabold text-navy">Enrolment and completion reports</h1>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white">
+      <h1 className="text-3xl font-extrabold text-ink">Enrolment and completion reports</h1>
+      <div className="mt-6 overflow-x-auto rounded-2xl panel">
         <table className="w-full min-w-[720px] text-left text-sm">
           <thead className="text-xs text-muted uppercase">
             <tr>
@@ -402,7 +402,7 @@ export function AdminReportsPage() {
                     )
               return (
                 <tr key={course.id} className="border-t border-line">
-                  <td className="px-3 py-3 font-semibold text-navy">{course.title}</td>
+                  <td className="px-3 py-3 font-semibold text-ink">{course.title}</td>
                   <td className="px-3 py-3">{courseEnrolments.length}</td>
                   <td className="px-3 py-3">{avg}%</td>
                 </tr>
@@ -432,7 +432,7 @@ function AdminTable({
     <div className="px-4 py-8 sm:px-6">
       <Seo title={title} description={`${title} in the Baazex Academy admin area.`} />
       <div className="flex flex-wrap items-end justify-between gap-3">
-        <h1 className="text-3xl font-extrabold text-navy">{title}</h1>
+        <h1 className="text-3xl font-extrabold text-ink">{title}</h1>
         {onCreate ? (
           <Button onClick={onCreate} icon={<Plus className="h-4 w-4" />}>
             New
@@ -442,7 +442,7 @@ function AdminTable({
       <div className="mt-5 max-w-sm">
         <Input label="Filter" value={query} onChange={(event) => onQuery(event.target.value)} />
       </div>
-      <div className="mt-6 overflow-x-auto rounded-2xl border border-line bg-white">{children}</div>
+      <div className="mt-6 overflow-x-auto rounded-2xl panel">{children}</div>
     </div>
   )
 }

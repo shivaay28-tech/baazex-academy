@@ -21,19 +21,19 @@ export function SearchAndFilters({
   const difficulties: Array<Difficulty | 'All'> = ['All', 'Beginner', 'Intermediate', 'Advanced']
 
   return (
-    <div className="rounded-2xl border border-line bg-white p-4 shadow-[0_10px_40px_-18px_rgb(6_21_43_/_0.08)]">
-      <label className="flex h-11 items-center gap-2 rounded-xl border border-line bg-canvas px-3">
+    <div className="panel rounded-2xl p-4">
+      <label className="flex h-11 items-center gap-2 rounded-xl border border-line bg-white/5 px-3">
         <Search className="h-4 w-4 text-muted" />
         <input
           value={query}
           onChange={(event) => onQuery(event.target.value)}
           placeholder="Search courses, topics, or platforms"
-          className="w-full bg-transparent text-sm outline-none"
+          className="w-full bg-transparent text-sm text-ink outline-none placeholder:text-muted"
           aria-label="Search courses"
         />
       </label>
       <div className="mt-3 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
-        <div className="no-scrollbar flex gap-2 overflow-x-auto">
+        <div className="no-scrollbar flex min-w-0 flex-1 gap-2 overflow-x-auto">
           <FilterChip active={categoryId === 'all'} onClick={() => onCategory('all')}>
             All categories
           </FilterChip>
@@ -70,7 +70,7 @@ function FilterChip({
       onClick={onClick}
       className={cn(
         'shrink-0 rounded-full px-3 py-1.5 text-xs font-semibold transition',
-        active ? 'bg-navy text-white' : 'bg-canvas text-muted hover:text-navy',
+        active ? 'bg-baazex text-ink shadow-float' : 'bg-white/5 text-muted hover:text-ink',
       )}
     >
       {children}

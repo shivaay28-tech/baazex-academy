@@ -273,7 +273,7 @@ export function EnginePage() {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#05070d] text-white">
+    <div className="atmosphere flex h-screen overflow-hidden bg-canvas text-ink">
       <Seo
         title="AI Engine"
         description="Baazex Academy AI Engine — educational chart and market-literacy assistant. Not investment advice."
@@ -332,19 +332,19 @@ export function EnginePage() {
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between gap-3 border-b border-white/8 px-4 py-3">
+        <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
           <div className="flex min-w-0 items-center gap-2 text-sm">
-            <button type="button" className="rounded-lg p-1.5 text-white/70 hover:bg-white/8 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open conversations">
+            <button type="button" className="rounded-lg p-1.5 text-ink/80 hover:bg-baazex/8 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open conversations">
               <Menu className="h-5 w-5" />
             </button>
             <span className="h-2 w-2 rounded-full bg-success" />
-            <span className="truncate font-semibold text-white/80">{active?.title ?? 'New analysis'}</span>
+            <span className="truncate font-semibold text-ink">{active?.title ?? 'New analysis'}</span>
           </div>
           <div className="flex items-center gap-2">
-            <span className="rounded-full border border-white/10 px-3 py-1 text-[11px] text-white/60">
+            <span className="rounded-full border border-line px-3 py-1 text-[11px] text-muted">
               {remaining} of {limit} {loggedIn ? 'left' : 'free left'}
             </span>
-            <span className="rounded-full border border-bright/30 bg-bright/10 px-3 py-1 text-[11px] font-semibold text-bright">
+            <span className="rounded-full border border-bright/30 bg-bright/10 px-3 py-1 text-[11px] font-semibold text-accent">
               Live
             </span>
           </div>
@@ -364,9 +364,9 @@ export function EnginePage() {
             <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 py-10 text-center sm:py-14">
               <div className="engine-orb mb-8 h-20 w-20 rounded-full" />
               <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
-                What are we <span className="text-bright">studying</span> today?
+                What are we <span className="text-accent">studying</span> today?
               </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-white/60">
+              <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
                 Drop a chart screenshot, a screen recording, or share your MT5 / TradingView window. You get an educational read of market structure, sessions, liquidity and risk — not a buy or sell call.
               </p>
               <div className="mt-8 grid w-full gap-3 sm:grid-cols-2">
@@ -380,36 +380,36 @@ export function EnginePage() {
                   onClick={() => void sendPrompt("Give me today's educational market brief for majors, gold and index CFDs. No trade calls.")}
                 />
               </div>
-              <p className="mt-6 max-w-2xl text-[11px] leading-relaxed text-white/35">{DISCLAIMER}</p>
+              <p className="mt-6 max-w-2xl text-[11px] leading-relaxed text-muted">{DISCLAIMER}</p>
             </div>
           ) : (
             <div className="relative mx-auto max-w-3xl space-y-6 px-4 py-8">
               {active?.messages.map((message, index) => (
                 <article key={message.id} className={message.role === 'user' ? 'ml-4 sm:ml-10' : 'mr-2 sm:mr-6'}>
-                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-white/35 uppercase">
+                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">
                     {message.role === 'user' ? 'You' : 'Baazex Engine'}
                   </p>
                   {message.attachments.map((attachment) =>
                     attachment.kind === 'image' ? (
-                      <img key={attachment.id} src={attachment.dataUrl} alt={attachment.name} className="mb-3 max-h-56 rounded-2xl border border-white/10" />
+                      <img key={attachment.id} src={attachment.dataUrl} alt={attachment.name} className="mb-3 max-h-56 rounded-2xl border border-line" />
                     ) : (
-                      <p key={attachment.id} className="mb-3 text-xs text-white/40">
+                      <p key={attachment.id} className="mb-3 text-xs text-muted">
                         Video attached: {attachment.name}
                       </p>
                     ),
                   )}
-                  <div className="rounded-2xl border border-white/8 bg-white/4 p-4">
+                  <div className="rounded-2xl border border-line bg-baazex/5 p-4">
                     {message.role === 'assistant' ? (
                       <EngineMarkdown text={message.content} />
                     ) : (
-                      <p className="whitespace-pre-wrap text-sm leading-7 text-white/85">{message.content}</p>
+                      <p className="whitespace-pre-wrap text-sm leading-7 text-ink">{message.content}</p>
                     )}
                   </div>
                   {message.role === 'assistant' && !sending ? (
                     <div className="mt-2 flex gap-2">
                       <button
                         type="button"
-                        className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-white/45 hover:bg-white/8 hover:text-white"
+                        className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-muted hover:bg-baazex/8 hover:text-accent"
                         onClick={() => {
                           void navigator.clipboard.writeText(message.content)
                           push('success', 'Copied')
@@ -420,7 +420,7 @@ export function EnginePage() {
                       {index === (active.messages.length - 1) ? (
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-white/45 hover:bg-white/8 hover:text-white"
+                          className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-[11px] text-muted hover:bg-baazex/8 hover:text-accent"
                           onClick={() => void regenerate()}
                         >
                           <RefreshCw className="h-3 w-3" /> Regenerate
@@ -432,10 +432,10 @@ export function EnginePage() {
               ))}
               {sending ? (
                 <article className="mr-2 sm:mr-6">
-                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-white/35 uppercase">Baazex Engine</p>
-                  <div className="rounded-2xl border border-bright/20 bg-white/4 p-4">
+                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">Baazex Engine</p>
+                  <div className="rounded-2xl border border-bright/20 bg-baazex/5 p-4">
                     {thinking && !stream ? (
-                      <p className="mb-3 text-xs leading-5 text-white/35 italic">Thinking… {thinking.slice(-160)}</p>
+                      <p className="mb-3 text-xs leading-5 text-muted italic">Thinking… {thinking.slice(-160)}</p>
                     ) : null}
                     <EngineMarkdown text={stream} caret />
                   </div>
@@ -448,7 +448,7 @@ export function EnginePage() {
                       key={item}
                       type="button"
                       onClick={() => void sendPrompt(item)}
-                      className="rounded-full border border-white/10 px-3 py-1.5 text-[12px] text-white/60 hover:border-bright/40 hover:text-white"
+                      className="rounded-full border border-line px-3 py-1.5 text-[12px] text-muted hover:border-bright/40 hover:text-accent"
                     >
                       {item}
                     </button>
@@ -459,7 +459,7 @@ export function EnginePage() {
           )}
         </div>
 
-        <div className="border-t border-white/5 px-3 py-3 sm:px-4">
+        <div className="border-t border-line px-3 py-3 sm:px-4">
           <div className="mx-auto mb-3 flex max-w-3xl flex-wrap gap-1.5">
             {instruments.map((item) => (
               <button
@@ -471,7 +471,7 @@ export function EnginePage() {
                     `Explain ${item.symbol} (${item.name}) as an educational study case. Cover how it is quoted, what typically moves it, session behaviour, and how to study it on a chart. No recommendation.`,
                   )
                 }}
-                className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${instrument === item.symbol ? 'border-bright bg-bright/15 text-bright' : 'border-white/10 text-white/55 hover:text-white'}`}
+                className={`rounded-full border px-2.5 py-1 text-[11px] font-semibold ${instrument === item.symbol ? 'border-bright bg-bright/15 text-accent' : 'border-line text-muted hover:text-accent'}`}
               >
                 {item.symbol}
               </button>
@@ -480,7 +480,7 @@ export function EnginePage() {
           {pendingFiles.length ? (
             <div className="mx-auto mb-2 flex max-w-3xl gap-2 overflow-x-auto">
               {pendingFiles.map((file) => (
-                <span key={file.id} className="rounded-lg bg-white/8 px-2 py-1 text-[11px] text-white/70">
+                <span key={file.id} className="rounded-lg bg-baazex/8 px-2 py-1 text-[11px] text-ink/80">
                   {file.name}
                 </span>
               ))}
@@ -500,7 +500,7 @@ export function EnginePage() {
               hasAttachments={pendingFiles.length > 0}
             />
           </div>
-          <p className="mx-auto mt-2 max-w-3xl text-center text-[11px] text-white/30">
+          <p className="mx-auto mt-2 max-w-3xl text-center text-[11px] text-muted">
             Analysis only, not financial advice · Baazex Academy · Learn · Understand · Practise
           </p>
         </div>
@@ -538,7 +538,7 @@ export function EnginePage() {
           Create a free Baazex Academy account to continue using the educational engine and to save course progress. This is not a trading signal service.
         </p>
         <div className="mt-5 flex gap-2">
-          <button type="button" className="h-11 flex-1 rounded-xl bg-baazex font-semibold text-white" onClick={() => navigate('/register')}>
+          <button type="button" className="h-11 flex-1 rounded-xl bg-baazex font-semibold text-ink" onClick={() => navigate('/register')}>
             Create account
           </button>
           <button type="button" className="h-11 flex-1 rounded-xl border border-line font-semibold" onClick={() => navigate('/login', { state: { from: '/engine' } })}>
@@ -562,12 +562,12 @@ function ActionCard({
   onClick: () => void
 }) {
   return (
-    <button type="button" onClick={onClick} className="rounded-2xl border border-white/8 bg-white/4 p-4 text-left hover:border-bright/30 hover:bg-white/7">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-bright/15 text-bright">
+    <button type="button" onClick={onClick} className="rounded-2xl border border-line bg-baazex/5 p-4 text-left hover:border-bright/30 hover:bg-baazex/8">
+      <span className="grid h-10 w-10 place-items-center rounded-xl bg-bright/15 text-accent">
         <Icon className="h-5 w-5" />
       </span>
       <p className="mt-3 font-bold">{title}</p>
-      <p className="mt-1 text-sm text-white/50">{text}</p>
+      <p className="mt-1 text-sm text-muted">{text}</p>
     </button>
   )
 }
