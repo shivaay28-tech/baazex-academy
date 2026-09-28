@@ -1,5 +1,5 @@
 import { proxyEngineChat } from './engineChatCore.ts'
-import { fetchTradingViewQuotes } from './tradingViewQuotes.ts'
+import { fetchTradingViewQuotes } from './tradingViewQuotes.js'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
 

@@ -1,4 +1,4 @@
-import { TRADING_VIEW_SYMBOLS, symbolsInText, tradingViewSymbol } from '../src/data/tradingView.ts'
+import { TRADING_VIEW_SYMBOLS, symbolsInText, tradingViewSymbol } from './tradingViewSymbols.js'
 
 export interface TradingViewQuote {
   symbol: string
