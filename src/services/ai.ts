@@ -530,16 +530,20 @@ export const aiService = {
 
     for (const attempt of attempts) {
       try {
+        const timeout = AbortSignal.timeout(20000)
+        const combined = signal
+          ? AbortSignal.any([signal, timeout])
+          : timeout
         const response = await fetch(attempt.url, {
           method: 'POST',
           headers: attempt.headers,
-          signal,
+          signal: combined,
           body: JSON.stringify(attempt.body),
         })
         if (!response.ok) continue
         const type = response.headers.get('content-type') ?? ''
         if (type.includes('application/json') && !type.includes('event-stream')) continue
-        return await readSseStream(response, onToken, signal, onThinking)
+        return await readSseStream(response, onToken, combined, onThinking)
       } catch {
         if (signal?.aborted) return ''
       }

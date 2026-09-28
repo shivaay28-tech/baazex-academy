@@ -1,6 +1,6 @@
 import { fetchTradingViewQuotes } from '../../server/tradingViewQuotes.js'
 
-export const config = { runtime: 'nodejs' }
+export const config = { runtime: 'edge', maxDuration: 15 }
 
 export default async function handler(request: Request) {
   try {

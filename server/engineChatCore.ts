@@ -57,7 +57,7 @@ async function resolveTarget(body: ChatBody) {
     return { url: 'https://api.openai.com/v1/chat/completions', key, model: requested || 'gpt-4o-mini' }
   }
 
-  const ollama = await ollamaReady()
+  const ollama = env('VERCEL') ? null : await ollamaReady()
   if (ollama) {
     return { url: 'http://127.0.0.1:11434/v1/chat/completions', key: 'ollama', model: requested || ollama }
   }
@@ -83,7 +83,7 @@ export async function proxyEngineChat(request: Request): Promise<Response> {
     const upstream = await fetch(target.url, {
       method: 'POST',
       headers,
-      signal: request.signal,
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(25000)]),
       body: JSON.stringify({
         model: target.model,
         temperature: body.temperature ?? 0.6,

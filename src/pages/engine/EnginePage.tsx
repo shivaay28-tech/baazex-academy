@@ -132,7 +132,10 @@ export function EnginePage() {
       const missing = mentioned.filter((item) => !have.has(item))
       if (missing.length) {
         try {
-          const extra = await tradingViewService.quotes(missing)
+          const extra = await Promise.race([
+            tradingViewService.quotes(missing),
+            new Promise<LiveQuote[]>((resolve) => window.setTimeout(() => resolve([]), 2500)),
+          ])
           if (extra.length) {
             const merged = [...quotesRef.current]
             for (const quote of extra) {

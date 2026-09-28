@@ -24,7 +24,9 @@ export function formatLiveQuote(symbol: string, value: number) {
 export const tradingViewService = {
   async quotes(symbols?: string[]) {
     const query = symbols?.length ? `?symbols=${encodeURIComponent(symbols.join(','))}` : ''
-    const response = await fetch(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/engine/quotes${query}`)
+    const response = await fetch(`${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/engine/quotes${query}`, {
+      signal: AbortSignal.timeout(4000),
+    })
     if (!response.ok) return [] as LiveQuote[]
     const payload = (await response.json()) as { quotes?: LiveQuote[] }
     return (payload.quotes ?? []).filter((item) => Number.isFinite(item.close) && item.close > 0)
