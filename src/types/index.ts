@@ -1,6 +1,4 @@
-export type Role = 'student' | 'admin' | 'superadmin'
-export type PaymentMethod = 'upi' | 'bank' | 'crypto'
-export type PaymentStatus = 'pending' | 'paid'
+export type Role = 'student' | 'admin'
 export type EnginePlan = 'free' | 'basic'
 export type Difficulty = 'Beginner' | 'Intermediate' | 'Advanced'
 export type CourseStatus = 'draft' | 'published'
