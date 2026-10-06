@@ -6,6 +6,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar'
 import { useAcademy } from '@/context/AcademyContext'
 import { useAuth } from '@/context/AuthContext'
 import { progressService } from '@/services/progress'
+import { APP_NAME } from '@/utils/constants'
 import { getCourseLessons } from '@/utils/course'
 import { formatDate } from '@/utils/format'
 import { Award, BookOpen, CheckCircle2, Clock3 } from 'lucide-react'
@@ -37,11 +38,11 @@ export function DashboardPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <Seo title="Dashboard" description="Your Baazex Academy learning dashboard." />
+      <Seo title="Dashboard" description={`Your ${APP_NAME} learning dashboard.`} />
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="text-sm text-muted">Welcome back</p>
-          <h1 className="text-3xl font-extrabold text-ink">{user?.fullName}</h1>
+          <h1 className="text-2xl font-extrabold text-ink sm:text-3xl">{user?.fullName}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button variant="secondary" onClick={() => navigate('/engine')}>

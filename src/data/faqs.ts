@@ -1,15 +1,15 @@
 import type { FaqItem } from '@/types'
+import { APP_NAME, APP_SHORT_NAME, COMPANY_NAME } from '@/utils/constants'
 
 export const faqs: FaqItem[] = [
   {
     id: 'faq-1',
-    question: 'Is Baazex Academy a trading signal service?',
-    answer:
-      'No. Baazex Academy is an educational platform. Courses explain market concepts, platform tools, and risk. They do not provide personalised investment advice, live trade recommendations, or guaranteed outcomes.',
+    question: `Is ${APP_NAME} a trading signal service?`,
+    answer: `No. ${APP_NAME} is an educational platform. Courses explain market concepts, platform tools, and risk. They do not provide personalised investment advice, live trade recommendations, or guaranteed outcomes.`,
   },
   {
     id: 'faq-2',
-    question: 'Do I need a Baazex trading account to study?',
+    question: `Do I need a ${APP_SHORT_NAME} trading account to study?`,
     answer:
       'You can create a free Academy account and study the courses without opening a live trading account. A trading account is optional and is a separate decision with its own suitability and risk considerations.',
   },
@@ -46,7 +46,6 @@ export const faqs: FaqItem[] = [
   {
     id: 'faq-8',
     question: 'Who provides the education?',
-    answer:
-      'Content is published by Baazex Academy, a learning resource of Baazex Financial Services L.L.C. Lessons are reviewed for clarity and for a strictly educational tone.',
+    answer: `Content is published by ${APP_NAME}, a learning resource of ${COMPANY_NAME}. Lessons are reviewed for clarity and for a strictly educational tone.`,
   },
 ]

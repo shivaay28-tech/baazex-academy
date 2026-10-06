@@ -10,6 +10,7 @@ import { useToast } from '@/context/ToastContext'
 import { categories } from '@/data/categories'
 import { authService } from '@/services/auth'
 import { catalogService } from '@/services/catalog'
+import { APP_NAME } from '@/utils/constants'
 import { progressService } from '@/services/progress'
 import type { Course, Difficulty, Lesson, Module } from '@/types'
 import { getCourseLessons, getLessonCount, progressPercent } from '@/utils/course'
@@ -25,7 +26,7 @@ export function AdminDashboardPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6">
-      <Seo title="Admin dashboard" description="Baazex Academy administration overview." />
+      <Seo title="Admin dashboard" description={`${APP_NAME} administration overview.`} />
       <h1 className="text-3xl font-extrabold text-ink">Admin dashboard</h1>
       <p className="mt-2 text-sm text-muted">Sample operations data. Connect REST endpoints through `src/services` when the API is ready.</p>
       <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -381,7 +382,7 @@ export function AdminReportsPage() {
 
   return (
     <div className="px-4 py-8 sm:px-6">
-      <Seo title="Reports" description="Enrolment and completion reports for Baazex Academy." />
+      <Seo title="Reports" description={`Enrolment and completion reports for ${APP_NAME}.`} />
       <h1 className="text-3xl font-extrabold text-ink">Enrolment and completion reports</h1>
       <div className="mt-6 overflow-x-auto rounded-2xl panel">
         <table className="w-full min-w-[720px] text-left text-sm">
@@ -435,7 +436,7 @@ function AdminTable({
 }) {
   return (
     <div className="px-4 py-8 sm:px-6">
-      <Seo title={title} description={`${title} in the Baazex Academy admin area.`} />
+      <Seo title={title} description={`${title} in the ${APP_NAME} admin area.`} />
       <div className="flex flex-wrap items-end justify-between gap-3">
         <h1 className="text-3xl font-extrabold text-ink">{title}</h1>
         {onCreate ? (

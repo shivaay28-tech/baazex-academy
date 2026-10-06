@@ -1,5 +1,5 @@
 import type { Quiz } from '@/types'
-import { PASSING_SCORE } from '@/utils/constants'
+import { APP_NAME, PASSING_SCORE } from '@/utils/constants'
 
 function q(
   id: string,
@@ -78,7 +78,7 @@ export const seedQuizzes: Quiz[] = [
       ),
       q(
         'qi5',
-        'Baazex Academy content is provided:',
+        `${APP_NAME} content is provided:`,
         [
           'As personalised investment advice',
           'As a guarantee of trading results',

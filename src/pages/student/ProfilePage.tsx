@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { countries } from '@/data/countries'
 import { authService } from '@/services/auth'
+import { APP_NAME } from '@/utils/constants'
 import { initials } from '@/utils/format'
 import { isPhone, isStrongPassword } from '@/utils/validation'
 import { useState } from 'react'
@@ -55,7 +56,7 @@ export function ProfilePage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6">
-      <Seo title="Profile and settings" description="Manage your Baazex Academy profile, password, and notification preferences." />
+      <Seo title="Profile and settings" description={`Manage your ${APP_NAME} profile, password, and notification preferences.`} />
       <h1 className="text-3xl font-extrabold text-ink">Profile and settings</h1>
 
       <section className="mt-8 rounded-3xl panel p-6">
@@ -100,7 +101,7 @@ export function ProfilePage() {
         <div className="mt-4 space-y-3">
           {(
             [
-              ['productUpdates', 'Product updates from Baazex Academy'],
+              ['productUpdates', `Product updates from ${APP_NAME}`],
               ['courseNotifications', 'Course notification settings'],
               ['weeklyDigest', 'Weekly learning digest'],
             ] as const

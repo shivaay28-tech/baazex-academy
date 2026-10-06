@@ -16,12 +16,12 @@ import {
   weekdayLabel,
 } from '@/data/engineKnowledge'
 import type { AiAnswerLength, AiAttachment } from '@/types'
-import { DISCLAIMER } from '@/utils/constants'
+import { APP_NAME, DISCLAIMER, ENGINE_NAME } from '@/utils/constants'
 import { symbolsInText } from '@/data/tradingView'
 import { formatLiveQuote, type LiveQuote } from '@/services/tradingView'
 import { inspectAttachments, type ChartRead } from '@/utils/chartRead'
 
-const SYSTEM_RULES = `You are Baazex Engine, the product assistant for Baazex Academy (forex, CFDs, MetaTrader 5, sessions, and risk).
+const SYSTEM_RULES = `You are ${ENGINE_NAME}, the product assistant for ${APP_NAME} (forex, CFDs, MetaTrader 5, sessions, and risk).
 
 When the user asks about a market and you have a symbol, a timeframe, and a last price, the first lines of the answer MUST be the call. Do not ask for a chart first.
 - Symbol and timeframe

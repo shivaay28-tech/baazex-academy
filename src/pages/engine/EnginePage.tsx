@@ -13,7 +13,7 @@ import { authService } from '@/services/auth'
 import { conversationService, newMessage } from '@/services/conversations'
 import { formatLiveQuote, tradingViewService, type LiveQuote } from '@/services/tradingView'
 import type { AiAttachment, AiConversation } from '@/types'
-import { BASIC_PRICE, COMPANY_URL, DISCLAIMER } from '@/utils/constants'
+import { APP_NAME, APP_SHORT_NAME, BASIC_PRICE, COMPANY_URL, DISCLAIMER, ENGINE_NAME } from '@/utils/constants'
 import { analysisTitle, uid } from '@/utils/format'
 import { Camera, Clapperboard, Copy, Menu, MonitorUp, NotebookPen, RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react'
@@ -314,7 +314,7 @@ export function EnginePage() {
     authService.updateProfile(user.id, { plan: 'basic' })
     refresh()
     setCreditsOpen(false)
-    push('success', 'Basic plan is active', 'Basic includes 200 questions and a free Baazex trading account.')
+    push('success', 'Basic plan is active', `Basic includes 200 questions and a free ${APP_SHORT_NAME} trading account.`)
   }
 
   function submit(event?: FormEvent, value?: string) {
@@ -338,10 +338,10 @@ export function EnginePage() {
   }
 
   return (
-    <div className="atmosphere flex h-screen overflow-hidden bg-canvas text-ink">
+    <div className="atmosphere flex h-dvh max-w-full overflow-hidden bg-canvas text-ink">
       <Seo
         title="AI Engine"
-        description="Baazex Academy AI Engine — educational chart and market-literacy assistant. Not investment advice."
+        description={`${APP_NAME} AI Engine — educational chart and market-literacy assistant. Not investment advice.`}
       />
       <div className="hidden md:block">
         <EngineSidebar
@@ -399,19 +399,19 @@ export function EnginePage() {
       ) : null}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+        <header className="flex min-w-0 items-center justify-between gap-2 border-b border-line px-3 py-2.5 sm:gap-3 sm:px-4 sm:py-3">
           <div className="flex min-w-0 items-center gap-2 text-sm">
-            <button type="button" className="rounded-lg p-1.5 text-ink/80 hover:bg-baazex/8 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open conversations">
+            <button type="button" className="grid h-10 w-10 shrink-0 place-items-center rounded-lg text-ink/80 hover:bg-baazex/8 md:hidden" onClick={() => setMobileNav(true)} aria-label="Open conversations">
               <Menu className="h-5 w-5" />
             </button>
-            <span className="h-2 w-2 rounded-full bg-success" />
+            <span className="h-2 w-2 shrink-0 rounded-full bg-success" />
             <span className="truncate font-semibold text-ink">{active?.title ?? 'New analysis'}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="rounded-full border border-line px-3 py-1 text-[11px] text-muted">
-              {plan === 'basic' ? `${remaining} of ${limit} on Basic` : `${remaining} of ${limit} free`}
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <span className="rounded-full border border-line px-2 py-1 text-[10px] text-muted sm:px-3 sm:text-[11px]">
+              {plan === 'basic' ? `${remaining}/${limit}` : `${remaining} free`}
             </span>
-            <span className="rounded-full border border-bright/30 bg-bright/10 px-3 py-1 text-[11px] font-semibold text-accent">
+            <span className="rounded-full border border-bright/30 bg-bright/10 px-2 py-1 text-[10px] font-semibold text-accent sm:px-3 sm:text-[11px]">
               Live
             </span>
           </div>
@@ -428,15 +428,15 @@ export function EnginePage() {
             style={{ background: 'radial-gradient(900px 320px at 50% -10%, rgb(0 102 255 / 0.2), transparent 58%)' }}
           />
           {empty ? (
-            <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 py-10 text-center sm:py-14">
-              <div className="engine-orb mb-8 h-20 w-20 rounded-full" />
-              <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+            <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 py-6 text-center sm:py-14">
+              <div className="engine-orb mb-5 h-14 w-14 rounded-full sm:mb-8 sm:h-20 sm:w-20" />
+              <h1 className="text-[1.65rem] leading-tight font-extrabold tracking-tight sm:text-5xl">
                 What are we <span className="text-accent">studying</span> today?
               </h1>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted">
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-muted sm:mt-4">
                 Pick a symbol. The engine uses the live TradingView price for the entry, stop, and target.
               </p>
-              <div className="mt-8 grid w-full gap-3 sm:grid-cols-2">
+              <div className="mt-6 grid w-full grid-cols-2 gap-2.5 sm:mt-8 sm:gap-3">
                 <ActionCard icon={MonitorUp} title="Share my screen" text="Live read of your MT5 or TradingView chart" onClick={shareScreen} />
                 <ActionCard icon={Camera} title="Upload a chart" text="Screenshot from any platform" onClick={() => fileRef.current?.click()} />
                 <ActionCard icon={Clapperboard} title="Send a video" text="I sample frames across the clip" onClick={() => videoRef.current?.click()} />
@@ -447,18 +447,18 @@ export function EnginePage() {
                   onClick={() => void sendPrompt('Give me a directional call on EURUSD, XAUUSD, and US30 for H1 using the live TradingView prices in this message.')}
                 />
               </div>
-              <p className="mt-6 max-w-2xl text-[11px] leading-relaxed text-muted">{DISCLAIMER}</p>
+              <p className="mt-6 hidden max-w-2xl text-[11px] leading-relaxed text-muted sm:block">{DISCLAIMER}</p>
             </div>
           ) : (
             <div className="relative mx-auto max-w-3xl space-y-6 px-4 py-8">
               {active?.messages.map((message, index) => (
                 <article key={message.id} className={message.role === 'user' ? 'ml-4 sm:ml-10' : 'mr-2 sm:mr-6'}>
                   <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">
-                    {message.role === 'user' ? 'You' : 'Baazex Engine'}
+                    {message.role === 'user' ? 'You' : ENGINE_NAME}
                   </p>
                   {message.attachments.map((attachment) =>
                     attachment.kind === 'image' ? (
-                      <img key={attachment.id} src={attachment.dataUrl} alt={attachment.name} className="mb-3 max-h-56 rounded-2xl border border-line" />
+                      <img key={attachment.id} src={attachment.dataUrl} alt={attachment.name} className="mb-3 max-h-56 w-full max-w-full rounded-2xl border border-line object-contain" />
                     ) : (
                       <p key={attachment.id} className="mb-3 text-xs text-muted">
                         Video attached: {attachment.name}
@@ -499,7 +499,7 @@ export function EnginePage() {
               ))}
               {sending ? (
                 <article className="mr-2 sm:mr-6">
-                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">Baazex Engine</p>
+                  <p className="mb-2 text-[11px] font-bold tracking-[0.16em] text-muted uppercase">{ENGINE_NAME}</p>
                   <div className="rounded-2xl border border-bright/20 bg-baazex/5 p-4">
                     {thinking && !stream ? (
                       <p className="mb-3 text-xs leading-5 text-muted italic">Thinking… {thinking.slice(-160)}</p>
@@ -526,9 +526,9 @@ export function EnginePage() {
           )}
         </div>
 
-        <div className="border-t border-line px-3 py-3 sm:px-4">
+        <div className="border-t border-line px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] sm:px-4 sm:py-3">
           <LiveMarket symbol={instrument ?? 'EURUSD'} quotes={quotes} onSelect={setInstrument} />
-          <div className="mx-auto mb-3 flex max-w-3xl gap-1.5 overflow-x-auto pb-1">
+          <div className="mx-auto mb-3 hidden max-w-3xl gap-1.5 overflow-x-auto pb-1 sm:flex">
             {instruments.map((item) => (
               <button
                 key={item.symbol}
@@ -569,8 +569,8 @@ export function EnginePage() {
               hasAttachments={pendingFiles.length > 0}
             />
           </div>
-          <p className="mx-auto mt-2 max-w-3xl text-center text-[11px] text-muted">
-            Analysis only, not financial advice · Baazex Academy · Learn · Understand · Practise
+          <p className="mx-auto mt-2 hidden max-w-3xl text-center text-[11px] text-muted sm:block">
+            Analysis only, not financial advice · {APP_NAME} · Learn · Understand · Practise
           </p>
         </div>
       </div>
@@ -612,7 +612,7 @@ export function EnginePage() {
         ) : (
           <>
             <p className="text-sm text-muted">
-              Five free questions are included. Basic is ${BASIC_PRICE} and adds 200 questions, plus a free Baazex trading account.
+              Five free questions are included. Basic is ${BASIC_PRICE} and adds 200 questions, plus a free {APP_SHORT_NAME} trading account.
             </p>
             <div className="mt-5 flex flex-col gap-2">
               <button type="button" className="h-11 rounded-xl bg-baazex font-semibold text-ink" onClick={confirmBasic}>
@@ -633,7 +633,7 @@ export function EnginePage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Open a free Baazex trading account
+                Open a free {APP_SHORT_NAME} trading account
               </a>
             </div>
           </>
@@ -703,12 +703,12 @@ function ActionCard({
   onClick: () => void
 }) {
   return (
-    <button type="button" onClick={onClick} className="rounded-2xl border border-line bg-baazex/5 p-4 text-left hover:border-bright/30 hover:bg-baazex/8">
-      <span className="grid h-10 w-10 place-items-center rounded-xl bg-bright/15 text-accent">
-        <Icon className="h-5 w-5" />
+    <button type="button" onClick={onClick} className="rounded-2xl border border-line bg-baazex/5 p-3 text-left hover:border-bright/30 hover:bg-baazex/8 sm:p-4">
+      <span className="grid h-8 w-8 place-items-center rounded-xl bg-bright/15 text-accent sm:h-10 sm:w-10">
+        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
       </span>
-      <p className="mt-3 font-bold">{title}</p>
-      <p className="mt-1 text-sm text-muted">{text}</p>
+      <p className="mt-2 text-sm font-bold sm:mt-3 sm:text-base">{title}</p>
+      <p className="mt-1 line-clamp-2 text-xs text-muted sm:text-sm">{text}</p>
     </button>
   )
 }

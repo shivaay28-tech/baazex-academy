@@ -5,6 +5,7 @@ import { useAcademy } from '@/context/AcademyContext'
 import { BookOpen } from 'lucide-react'
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { APP_NAME } from '@/utils/constants'
 
 const tabs = ['All Courses', 'In Progress', 'Completed', 'Saved Courses'] as const
 
@@ -27,7 +28,7 @@ export function MyCoursesPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6">
-      <Seo title="My courses" description="Courses you have enrolled in or saved on Baazex Academy." />
+      <Seo title="My courses" description={`Courses you have enrolled in or saved on ${APP_NAME}.`} />
       <h1 className="text-3xl font-extrabold text-ink">My courses</h1>
       <div className="no-scrollbar mt-6 flex gap-2 overflow-x-auto">
         {tabs.map((item) => (

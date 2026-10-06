@@ -1,3 +1,4 @@
+import { BRAND } from './server/brand.ts'
 import { engineChatPlugin } from './server/engineChat.ts'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
@@ -9,7 +10,17 @@ const root = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   base: process.env.BASE_PATH || '/',
-  plugins: [react(), tailwindcss(), engineChatPlugin()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    engineChatPlugin(),
+    {
+      name: 'brand-html',
+      transformIndexHtml(html) {
+        return html.replaceAll('Baazex Academy', BRAND.name)
+      },
+    },
+  ],
   resolve: {
     alias: {
       '@': path.resolve(root, 'src'),

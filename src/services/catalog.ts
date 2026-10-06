@@ -1,7 +1,7 @@
 import { seedCourses } from '@/data/courses'
 import { seedQuizzes } from '@/data/quizzes'
 import type { Course, Quiz } from '@/types'
-import { STORAGE_KEYS } from '@/utils/constants'
+import { APP_NAME, STORAGE_KEYS } from '@/utils/constants'
 import { uid } from '@/utils/format'
 import { readJson, writeJson } from '@/services/storage'
 
@@ -91,7 +91,7 @@ export const catalogService = {
       difficulty: 'Beginner',
       durationHours: 1,
       objectives: ['Describe a core market concept'],
-      instructor: 'Baazex Academy',
+      instructor: APP_NAME,
       status: 'draft',
       popular: false,
       featured: false,

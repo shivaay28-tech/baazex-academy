@@ -4,7 +4,7 @@ import { EmptyState } from '@/components/ui/EmptyState'
 import { Logo } from '@/components/ui/Logo'
 import { useAuth } from '@/context/AuthContext'
 import { progressService } from '@/services/progress'
-import { DISCLAIMER } from '@/utils/constants'
+import { APP_NAME, DISCLAIMER } from '@/utils/constants'
 import { formatDateLong } from '@/utils/format'
 import { Award } from 'lucide-react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -15,7 +15,7 @@ export function CertificatesPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      <Seo title="Certificates" description="Sample completion certificates issued by Baazex Academy." />
+      <Seo title="Certificates" description={`Sample completion certificates issued by ${APP_NAME}.`} />
       <h1 className="text-3xl font-extrabold text-ink">Certificates</h1>
       {records.length ? (
         <div className="mt-6 grid gap-4">
@@ -67,7 +67,7 @@ export function CertificatePage() {
             <Logo />
           </div>
           <p className="mt-8 text-xs font-bold tracking-[0.28em] text-accent uppercase">Certificate of completion</p>
-          <h1 className="mt-4 font-serif text-4xl text-ink sm:text-5xl">Baazex Academy</h1>
+          <h1 className="mt-4 font-serif text-4xl text-ink sm:text-5xl">{APP_NAME}</h1>
           <p className="mt-8 text-sm text-muted">This is to certify that</p>
           <p className="mt-2 font-serif text-3xl text-ink">{record.studentName}</p>
           <p className="mt-6 text-sm text-muted">has completed the educational course</p>

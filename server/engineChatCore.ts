@@ -1,3 +1,5 @@
+import { BRAND } from './brand.js'
+
 interface ChatBody {
   messages?: Array<{
     role: string
@@ -9,7 +11,7 @@ interface ChatBody {
   temperature?: number
 }
 
-const SYSTEM_FALLBACK = `You are Baazex Engine, the product assistant for Baazex Academy.
+const SYSTEM_FALLBACK = `You are ${BRAND.engineName}, the product assistant for ${BRAND.name}.
 If you have a symbol, a timeframe, and a last price, the first lines MUST be Bias (Buy or Sell; default Buy if they did not choose), Entry at that price, Stop, and Target. A TradingView live quote in the message is the last price — use the close as the entry, not the bid or the ask, and do not ask for a price. Silver uses about a 0.30 stop and a 0.50 target. Do not ask for a chart first. Do not invent a quote. If the symbol, timeframe, or a live price is missing, ask only for the missing piece.
 Results are not guaranteed. Close with one short risk reminder.`
 

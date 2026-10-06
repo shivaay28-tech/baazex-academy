@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 import { useToast } from '@/context/ToastContext'
 import { authService } from '@/services/auth'
+import { APP_NAME } from '@/utils/constants'
 import { isEmail, required } from '@/utils/validation'
 import { useState, type FormEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
@@ -33,7 +34,7 @@ export function ForgotPasswordPage() {
 
   return (
     <div>
-      <Seo title="Forgot password" description="Request a Baazex Academy password reset." />
+      <Seo title="Forgot password" description={`Request a ${APP_NAME} password reset.`} />
       <h1 className="text-3xl font-extrabold text-ink">Forgot password</h1>
       <p className="mt-2 text-sm text-muted">Enter your email. In this demo, a reset token is generated locally instead of sending mail.</p>
       <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
@@ -84,7 +85,7 @@ export function ResetPasswordPage() {
 
   return (
     <div>
-      <Seo title="Reset password" description="Choose a new Baazex Academy password." />
+      <Seo title="Reset password" description={`Choose a new ${APP_NAME} password.`} />
       <h1 className="text-3xl font-extrabold text-ink">Reset password</h1>
       <form className="mt-8 space-y-4" onSubmit={onSubmit} noValidate>
         <Input label="Reset token" value={token} onChange={(event) => setToken(event.target.value)} />

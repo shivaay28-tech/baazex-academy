@@ -1,3 +1,4 @@
+import { APP_SHORT_NAME } from '@/utils/constants'
 import { cn } from '@/utils/cn'
 import { useId } from 'react'
 
@@ -38,7 +39,7 @@ export function Logo({
       {compact ? null : (
         <span className="leading-tight">
           <span className={cn('block text-[13px] font-extrabold tracking-tight', light ? 'text-ink' : 'text-ink')}>
-            Baazex
+            {APP_SHORT_NAME}
           </span>
           <span className={cn('block text-[11px] font-semibold tracking-[0.18em] uppercase', light ? 'text-ink/80' : 'text-accent')}>
             Academy

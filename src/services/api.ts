@@ -1,9 +1,11 @@
+import { APP_NAME } from '@/utils/constants'
+
 const env = import.meta.env
 
 export const apiConfig = {
   baseUrl: (env.VITE_API_BASE_URL as string | undefined) ?? '',
   timeoutMs: Number(env.VITE_API_TIMEOUT_MS ?? 15000),
-  appName: (env.VITE_APP_NAME as string | undefined) ?? 'Baazex Academy',
+  appName: (env.VITE_APP_NAME as string | undefined) ?? APP_NAME,
 }
 
 /**

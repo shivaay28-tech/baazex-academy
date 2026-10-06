@@ -1,6 +1,6 @@
 import { Disclaimer } from '@/components/ui/Disclaimer'
 import { Logo } from '@/components/ui/Logo'
-import { COMPANY_NAME, COMPANY_URL } from '@/utils/constants'
+import { APP_NAME, COMPANY_HOST, COMPANY_NAME, COMPANY_URL } from '@/utils/constants'
 import { Link } from 'react-router-dom'
 
 const columns = [
@@ -38,14 +38,14 @@ const columns = [
 export function Footer() {
   return (
     <footer className="border-t border-bright/15 bg-navy text-ink shadow-[inset_0_1px_0_rgb(92_225_255_/_0.18)]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 lg:grid-cols-12">
-        <div className="lg:col-span-4">
+      <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-10 sm:px-6 sm:py-14 lg:grid-cols-12 lg:gap-10">
+        <div className="col-span-2 lg:col-span-4">
           <Logo light />
           <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink/70">
             Structured education on forex, CFDs, market analysis, risk, and MetaTrader 5 from {COMPANY_NAME}.
           </p>
           <a href={COMPANY_URL} className="mt-4 inline-block text-sm font-semibold text-ink hover:underline">
-            www.baazex.com
+            www.{COMPANY_HOST}
           </a>
         </div>
         {columns.map((column) => (
@@ -71,7 +71,7 @@ export function Footer() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6">
           <Disclaimer className="text-ink/45" compact />
           <p className="mt-3 text-xs text-ink/35">
-            © {new Date().getFullYear()} {COMPANY_NAME}. Baazex Academy. All rights reserved.
+            © {new Date().getFullYear()} {COMPANY_NAME}. {APP_NAME}. All rights reserved.
           </p>
         </div>
       </div>
