@@ -31,8 +31,8 @@ When the user asks about a market and you have a symbol, a timeframe, and a last
 - One short reason from how that product is quoted, which session matters, and what usually moves it
 
 A TradingView live quote in the message is the last price. Use that close as the entry and do not ask for a price that is already quoted.
-When a chart image is attached and the message does not name a symbol, the symbol, timeframe, and last price printed on the chart are the ones for this answer. That label wins over every other symbol. A gold chart is XAUUSD. Use the price shown on the chart. Do not analyse a different pair.
-If the symbol, timeframe, or a live price is missing, ask only for the missing piece and do not invent a quote.
+When a chart image is attached, ignore every other symbol. The first lines MUST be the call for the symbol, timeframe, and last price printed on that chart. A gold chart is XAUUSD. A label of 1D means daily. The close printed on the chart is the entry. Do not ask for a symbol, timeframe, or price that is already printed. Do not mention any other symbol.
+If no chart image is attached and the symbol, timeframe, or a live price is missing, ask only for the missing piece and do not invent a quote.
 Do not invent candle prices you cannot see. Results are not guaranteed. Close with one short risk reminder.`
 
 export type EngineTopic =
@@ -111,8 +111,9 @@ function chartImageSetsSymbol(input: AskInput) {
 
 function parseQuestion(input: AskInput) {
   const prior = previousUserText(input.history, input.prompt)
+  const hasImage = input.attachments.some((item) => item.kind === 'image')
   const chartLabel = chartImageSetsSymbol(input)
-  const symbols = chartLabel
+  const symbols = hasImage
     ? detectSymbols(input.prompt)
     : detectSymbols(`${input.prompt} ${input.instrument ?? ''} ${prior}`, input.instrument)
   let topics = detectTopics(input.prompt, input.attachments.length > 0)
@@ -163,6 +164,111 @@ function detectBias(text: string, slope?: ChartRead['slope']): 'buy' | 'sell' {
   if (slope === 'lower to the right') return 'sell'
   if (slope === 'higher to the right') return 'buy'
   return 'buy'
+}
+
+function detectChartBias(text: string): 'buy' | 'sell' | undefined {
+  const sell = /\b(sell|short|bearish)\b/i.test(text)
+  const buy = /\b(buy|long|bullish)\b/i.test(text)
+  if (sell && !buy) return 'sell'
+  if (buy && !sell) return 'buy'
+  return undefined
+}
+
+function normalizeTimeframe(text: string) {
+  const upper = text.toUpperCase()
+  const rules: Array<[RegExp, string]> = [
+    [/\b(?:1D|D1|DAILY)\b/, '1D'],
+    [/\b(?:1W|W1|WEEKLY)\b/, '1W'],
+    [/\b(?:4H|H4)\b/, '4H'],
+    [/\b(?:1H|H1)\b/, '1H'],
+    [/\b(?:30M|M30)\b/, '30m'],
+    [/\b(?:15M|M15)\b/, '15m'],
+    [/\b(?:5M|M5)\b/, '5m'],
+    [/\b(?:1M|M1)\b/, '1m'],
+    [/\b240\b/, '4H'],
+    [/\b60\b/, '1H'],
+    [/\b30\b/, '30m'],
+    [/\b15\b/, '15m'],
+    [/\b5\b/, '5m'],
+    [/\b1\b/, '1m'],
+  ]
+  for (const [pattern, label] of rules) {
+    if (pattern.test(upper)) return label
+  }
+  return undefined
+}
+
+export interface ChartLabel {
+  symbol?: string
+  timeframe?: string
+  bias?: 'buy' | 'sell'
+}
+
+function parseChartLabel(text: string): ChartLabel | undefined {
+  const lines = text.split('\n').map((item) => item.trim()).filter(Boolean)
+  if (!lines.length) return undefined
+  const symbolLine = lines.find((line) => symbolsInText(line).length > 0) ?? lines.join(' ')
+  const symbol = symbolsInText(symbolLine)[0] ?? symbolsInText(text)[0]
+  const timeframe = normalizeTimeframe(symbolLine) ?? normalizeTimeframe(text)
+  const bias = detectChartBias(symbolLine) ?? detectChartBias(text)
+  if (!symbol && !timeframe && !bias) return undefined
+  return { symbol, timeframe, bias }
+}
+
+export interface ChartLevelInput {
+  symbol: string
+  timeframe?: string
+  bias?: 'buy' | 'sell'
+  quote?: LiveQuote
+}
+
+export function formatChartLevels(input: ChartLevelInput) {
+  const title = [input.symbol, input.timeframe].filter(Boolean).join(' ')
+  if (!input.quote || !(input.quote.close > 0)) {
+    return {
+      priced: false,
+      text: [
+        heading(title),
+        `The live TradingView rate for ${input.symbol} did not load, so no entry, stops, or targets were set.`,
+      ].join('\n\n'),
+    }
+  }
+  const price = input.quote.close
+  const live = `Live rate: ${formatLevel(input.symbol, price)}. Change ${input.quote.change.toFixed(2)}%. This is the TradingView close. Bid and ask are not the entry.`
+  if (!input.bias) {
+    return {
+      priced: false,
+      text: [
+        heading(title),
+        live,
+        'The swing on the chart did not set a Buy or Sell side, so stops and targets were not set.',
+        DISCLAIMER,
+      ].join('\n\n'),
+    }
+  }
+  const distance = levelDistance(input.symbol, price)
+  const direction = input.bias === 'buy' ? 1 : -1
+  const study = INSTRUMENT_STUDY[input.symbol]
+  const reason = study
+    ? `${study.whatMovesIt} ${instrumentSession(input.symbol) ?? ''}`.trim()
+    : 'Stops sit against the bias. Targets sit with the bias.'
+  return {
+    priced: true,
+    text: [
+      heading(title),
+      bullets([
+        live,
+        `Bias: ${input.bias === 'buy' ? 'Buy' : 'Sell'}`,
+        `Entry: ${formatLevel(input.symbol, price)}`,
+        `SL1: ${formatLevel(input.symbol, price - direction * distance.stop)}`,
+        `SL2: ${formatLevel(input.symbol, price - direction * distance.stop * 2)}`,
+        `TP1: ${formatLevel(input.symbol, price + direction * distance.target)}`,
+        `TP2: ${formatLevel(input.symbol, price + direction * distance.target * 2)}`,
+      ]),
+      reason,
+      DISCLAIMER,
+    ].join('\n\n'),
+  }
 }
 
 function formatLevel(symbol: string, value: number) {
@@ -228,7 +334,7 @@ function chartSection(reads: ChartRead[], symbols: string[]) {
     bullets([
       `A series that is higher to the right is a buy bias. Lower to the right is a sell bias${symbolText}.`,
       'The stop belongs beyond the last obvious swing against that bias. The target is the next swing in the direction of the bias.',
-      'A chart image does not contain a trustworthy last price. Levels are only printed when you also give the last price.',
+      'When a last price is printed on the chart, that close is the entry.',
     ]),
   ].join('\n\n')
 }
@@ -344,9 +450,9 @@ function callSection(input: AskInput, symbols: string[], reads: ChartRead[]) {
 }
 
 async function composeReply(input: AskInput) {
+  const reads = await inspectAttachments(input.attachments)
   const parsed = parseQuestion(input)
   const brief = input.answerLength === 'brief'
-  const reads = await inspectAttachments(input.attachments)
   const sections: string[] = [answerLead(input.prompt, parsed.symbols, parsed.followUp)]
 
   if (marketQuestion(parsed.topics, parsed.symbols)) {
@@ -406,7 +512,7 @@ function quoteBlock(quotes: LiveQuote[] | undefined) {
 }
 
 function userContent(input: AskInput, chartNote: string) {
-  const images = input.attachments.filter((item) => item.kind === 'image' && item.dataUrl.length < 420_000).slice(0, 2)
+  const images = input.attachments.filter((item) => item.kind === 'image' && item.dataUrl.length < 1_200_000).slice(0, 2)
   const chartLabel = chartImageSetsSymbol(input)
   const text = [
     chartLabel ? '' : quoteBlock(input.liveQuotes),
@@ -491,9 +597,133 @@ async function streamLocal(input: AskInput, onToken: (token: string) => void) {
   return output
 }
 
+const CHART_LABEL_PROMPT = `The image is a trading chart. Reply with one line and nothing else: SYMBOL TIMEFRAME BUY or SELL.
+Read the symbol and timeframe printed on the chart. Gold Spot or XAU is XAUUSD. A printed 15 is 15m. A printed 1 is 1m. 1D means daily.
+SELL when candles are lower toward the right. BUY when candles are higher toward the right. Do not answer BUY when the swing is mixed.
+Do not name a symbol that is not printed on the chart.`
+
+function messageText(content: unknown) {
+  if (typeof content === 'string') return content
+  if (!Array.isArray(content)) return ''
+  return content
+    .map((part) => {
+      if (typeof part === 'string') return part
+      if (part && typeof part === 'object' && 'text' in part && typeof part.text === 'string') return part.text
+      return ''
+    })
+    .filter(Boolean)
+    .join('\n')
+}
+
+function loadHtmlImage(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const image = new Image()
+    image.onload = () => resolve(image)
+    image.onerror = () => reject(new Error('Could not read the chart image.'))
+    image.src = src
+  })
+}
+
+async function chartJpeg(dataUrl: string, cropTop?: number) {
+  try {
+    const image = await loadHtmlImage(dataUrl)
+    const scale = Math.min(1, 1200 / Math.max(image.naturalWidth || image.width, 1))
+    const fullWidth = Math.max(1, Math.round((image.naturalWidth || image.width) * scale))
+    const fullHeight = Math.max(1, Math.round((image.naturalHeight || image.height) * scale))
+    const height = cropTop ? Math.max(48, Math.round(fullHeight * cropTop)) : fullHeight
+    const canvas = document.createElement('canvas')
+    canvas.width = fullWidth
+    canvas.height = height
+    const context = canvas.getContext('2d')
+    if (!context) return dataUrl
+    context.drawImage(image, 0, 0, image.naturalWidth || image.width, ((image.naturalHeight || image.height) * height) / fullHeight, 0, 0, fullWidth, height)
+    return canvas.toDataURL('image/jpeg', 0.62)
+  } catch {
+    return dataUrl
+  }
+}
+
+async function requestModelText(
+  messages: Array<{ role: string; content: unknown }>,
+  signal?: AbortSignal,
+) {
+  const attempts: Array<{ url: string; headers: Record<string, string>; body: unknown }> = [
+    {
+      url: `${import.meta.env.BASE_URL.replace(/\/$/, '')}/api/engine/chat`,
+      headers: { 'Content-Type': 'application/json' },
+      body: { messages, model: 'openai', temperature: 0.1 },
+    },
+    {
+      url: 'https://text.pollinations.ai/openai',
+      headers: { 'Content-Type': 'application/json', Authorization: 'Bearer anonymous' },
+      body: { messages, model: 'openai', temperature: 0.1, stream: true },
+    },
+  ]
+  for (const attempt of attempts) {
+    try {
+      const timeout = AbortSignal.timeout(45000)
+      const combined = signal ? AbortSignal.any([signal, timeout]) : timeout
+      const response = await fetch(attempt.url, {
+        method: 'POST',
+        headers: attempt.headers,
+        signal: combined,
+        body: JSON.stringify(attempt.body),
+      })
+      if (!response.ok) continue
+      const type = response.headers.get('content-type') ?? ''
+      let text = ''
+      if (type.includes('application/json') && !type.includes('event-stream')) {
+        const payload = (await response.json()) as {
+          choices?: Array<{ message?: { content?: unknown } }>
+        }
+        text = messageText(payload.choices?.[0]?.message?.content)
+      } else if (!type.includes('event-stream')) {
+        text = await response.text()
+      } else {
+        text = await readSseStream(response, () => undefined, combined)
+      }
+      const label = parseChartLabel(text)
+      if (label?.symbol) return text
+    } catch {
+      if (signal?.aborted) return ''
+    }
+  }
+  return ''
+}
+
 export const aiService = {
   isLive() {
     return true
+  },
+
+  async readChartLabel(image: AiAttachment, signal?: AbortSignal) {
+    if (signal?.aborted) return undefined
+    const prepared = await chartJpeg(image.dataUrl)
+    const header = await chartJpeg(image.dataUrl, 0.28)
+    let text = ''
+    for (const shot of [prepared, header]) {
+      text = await requestModelText(
+        [
+          {
+            role: 'user',
+            content: [
+              { type: 'text', text: CHART_LABEL_PROMPT },
+              { type: 'image_url', image_url: { url: shot } },
+            ],
+          },
+        ],
+        signal,
+      )
+      if (parseChartLabel(text)?.symbol) break
+    }
+    const label = parseChartLabel(text)
+    if (!label?.symbol) return undefined
+    if (!label.bias) {
+      const reads = await inspectAttachments([{ kind: 'image', dataUrl: prepared }])
+      if (reads[0]?.slope === 'lower to the right') label.bias = 'sell'
+      else if (reads[0]?.slope === 'higher to the right') label.bias = 'buy'
+    }
+    return label
   },
 
   async ask(input: AskInput) {
@@ -511,7 +741,11 @@ export const aiService = {
     onThinking?: (token: string) => void,
   ) {
     const reads = await inspectAttachments(input.attachments)
-    const chartNote = reads.length ? reads.map((item) => item.note).join(' ') : ''
+    const chartNote = reads.length
+      ? chartImageSetsSymbol(input)
+        ? `Visible swing on the attached chart: ${reads.map((item) => item.slope).join(', ')}.`
+        : reads.map((item) => item.note).join(' ')
+      : ''
     const messages = [
       { role: 'system', content: SYSTEM_RULES },
       ...historyWithoutDuplicate(input).map((item) => ({ role: item.role, content: item.content })),
@@ -542,9 +776,10 @@ export const aiService = {
       },
     ]
 
+    const hasImage = input.attachments.some((item) => item.kind === 'image')
     for (const attempt of attempts) {
       try {
-        const timeout = AbortSignal.timeout(20000)
+        const timeout = AbortSignal.timeout(hasImage ? 55000 : 20000)
         const combined = signal
           ? AbortSignal.any([signal, timeout])
           : timeout
@@ -556,7 +791,15 @@ export const aiService = {
         })
         if (!response.ok) continue
         const type = response.headers.get('content-type') ?? ''
-        if (type.includes('application/json') && !type.includes('event-stream')) continue
+        if (type.includes('application/json') && !type.includes('event-stream')) {
+          const payload = (await response.json()) as {
+            choices?: Array<{ message?: { content?: string | null } }>
+          }
+          const text = payload.choices?.[0]?.message?.content ?? ''
+          if (!text.trim()) continue
+          onToken(text)
+          return text
+        }
         return await readSseStream(response, onToken, combined, onThinking)
       } catch {
         if (signal?.aborted) return ''
