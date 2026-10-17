@@ -1,4 +1,5 @@
 import { Seo } from '@/components/Seo'
+import { BasicCheckout } from '@/components/engine/BasicCheckout'
 import { EngineComposer } from '@/components/engine/EngineComposer'
 import { EngineMarkdown } from '@/components/engine/EngineMarkdown'
 import { EngineRail } from '@/components/engine/EngineRail'
@@ -9,20 +10,16 @@ import { useToast } from '@/context/ToastContext'
 import { instruments } from '@/data/instruments'
 import { symbolsInText, tradingViewTicker } from '@/data/tradingView'
 import { aiService, formatChartLevels } from '@/services/ai'
-import { authService } from '@/services/auth'
 import { conversationService, newMessage } from '@/services/conversations'
 import { formatLiveQuote, tradingViewService, type LiveQuote } from '@/services/tradingView'
 import type { AiAttachment, AiConversation } from '@/types'
-import { APP_NAME, APP_SHORT_NAME, BASIC_PRICE, COMPANY_URL, DISCLAIMER, ENGINE_NAME } from '@/utils/constants'
+import { APP_NAME, DISCLAIMER, ENGINE_NAME } from '@/utils/constants'
 import { analysisTitle, uid } from '@/utils/format'
 import { Camera, Clapperboard, Copy, Menu, MonitorUp, NotebookPen, RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
-
 export function EnginePage() {
-  const { user, refresh } = useAuth()
+  const { user } = useAuth()
   const { push } = useToast()
-  const navigate = useNavigate()
   const [collapsed, setCollapsed] = useState(false)
   const [conversations, setConversations] = useState<AiConversation[]>(() => conversationService.list())
   const [activeId, setActiveId] = useState<string | undefined>(conversations[0]?.id)
@@ -51,9 +48,9 @@ export function EnginePage() {
   const [sharingScreen, setSharingScreen] = useState(false)
   const [analysisPopup, setAnalysisPopup] = useState(false)
 
-  const plan = user?.plan === 'basic' ? 'basic' : 'free'
-  const remaining = conversationService.remaining(plan, user?.id)
-  const limit = conversationService.creditLimit(plan)
+  const bonusQuestions = user?.bonusQuestions ?? 0
+  const remaining = conversationService.remaining(bonusQuestions, user?.id)
+  const limit = conversationService.creditLimit(bonusQuestions)
   const active = conversations.find((item) => item.id === activeId)
   const empty = (!active || active.messages.length === 0) && !sending
   const threadCount = (active?.messages.length ?? 0) + (stream ? 1 : 0)
@@ -530,16 +527,6 @@ export function EnginePage() {
     await generateReply(conversation.id, userMessage, instrument)
   }
 
-  function confirmBasic() {
-    if (!user) {
-      navigate('/register', { state: { from: '/engine' } })
-      return
-    }
-    void authService.updateProfile(user.id, { plan: 'basic' }).then(() => refresh())
-    setCreditsOpen(false)
-    push('success', 'Basic plan is active', `Basic includes 200 questions and a free ${APP_SHORT_NAME} trading account.`)
-  }
-
   function submit(event?: FormEvent, value?: string) {
     event?.preventDefault()
     void sendPrompt((value ?? draft).trim() ? (value ?? draft) : draft)
@@ -584,7 +571,6 @@ export function EnginePage() {
           }}
           remaining={remaining}
           limit={limit}
-          plan={plan}
         />
       </div>
 
@@ -615,7 +601,6 @@ export function EnginePage() {
               }}
               remaining={remaining}
               limit={limit}
-              plan={plan}
             />
           </div>
         </div>
@@ -632,7 +617,7 @@ export function EnginePage() {
           </div>
           <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
             <span className="rounded-full border border-line px-2 py-1 text-[10px] text-muted sm:px-3 sm:text-[11px]">
-              {plan === 'basic' ? `${remaining}/${limit}` : `${remaining} free`}
+              {remaining}/{limit}
             </span>
             <span className="rounded-full border border-bright/30 bg-bright/10 px-2 py-1 text-[10px] font-semibold text-accent sm:px-3 sm:text-[11px]">
               Live
@@ -858,42 +843,8 @@ export function EnginePage() {
         }}
       />
 
-      <Modal
-        open={creditsOpen}
-        title={plan === 'basic' ? 'Your Basic questions are used up' : 'Basic plan — $30'}
-        onClose={() => setCreditsOpen(false)}
-      >
-        {plan === 'basic' ? (
-          <p className="text-sm text-muted">You have used the 200 questions included with Basic.</p>
-        ) : (
-          <>
-            <p className="text-sm text-muted">
-              Five free questions are included. Basic is ${BASIC_PRICE} and adds 200 questions, plus a free {APP_SHORT_NAME} trading account.
-            </p>
-            <div className="mt-5 flex flex-col gap-2">
-              <button type="button" className="h-11 rounded-xl bg-baazex font-semibold text-on-button" onClick={confirmBasic}>
-                {user ? `Confirm Basic — $${BASIC_PRICE}` : 'Create an account to get Basic'}
-              </button>
-              {user ? null : (
-                <button
-                  type="button"
-                  className="h-11 rounded-xl border border-line font-semibold"
-                  onClick={() => navigate('/login', { state: { from: '/engine' } })}
-                >
-                  Sign in
-                </button>
-              )}
-              <a
-                href={COMPANY_URL}
-                className="flex h-11 items-center justify-center rounded-xl border border-line text-sm font-semibold text-accent"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Open a free {APP_SHORT_NAME} trading account
-              </a>
-            </div>
-          </>
-        )}
+      <Modal open={creditsOpen} title="Engine questions" onClose={() => setCreditsOpen(false)}>
+        <BasicCheckout />
       </Modal>
     </div>
   )

@@ -36,6 +36,7 @@ import { LessonViewerPage } from '@/pages/student/LessonViewerPage'
 import { MyCoursesPage } from '@/pages/student/MyCoursesPage'
 import { ProfilePage } from '@/pages/student/ProfilePage'
 import { QuizPage } from '@/pages/student/QuizPage'
+import { CreditsPage } from '@/pages/admin/CreditsPage'
 import { EnginePage } from '@/pages/engine/EnginePage'
 import { isSupabaseEnabled } from '@/services/backend'
 import { authService } from '@/services/auth'
@@ -126,6 +127,7 @@ export default function App() {
                 <Route path="/admin/modules" element={<AdminModulesPage />} />
                 <Route path="/admin/lessons" element={<AdminLessonsPage />} />
                 <Route path="/admin/students" element={<AdminStudentsPage />} />
+                <Route path="/admin/credits" element={<CreditsPage />} />
                 <Route path="/admin/quizzes" element={<AdminQuizzesPage />} />
                 <Route path="/admin/certificates" element={<AdminCertificatesPage />} />
                 <Route path="/admin/reports" element={<AdminReportsPage />} />

@@ -1,9 +1,13 @@
 import { Logo } from '@/components/ui/Logo'
 import { useAuth } from '@/context/AuthContext'
-import type { AiConversation, EnginePlan } from '@/types'
+import { useToast } from '@/context/ToastContext'
+import { authService } from '@/services/auth'
+import type { AiConversation } from '@/types'
+import { BAAZEX_ACCOUNT_URL } from '@/utils/constants'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
-import { ChevronLeft, ChevronRight, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react'
+import { ChevronLeft, ChevronRight, ExternalLink, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export function EngineSidebar({
@@ -18,7 +22,6 @@ export function EngineSidebar({
   onDelete,
   remaining,
   limit,
-  plan,
 }: {
   collapsed: boolean
   onToggle: () => void
@@ -31,9 +34,35 @@ export function EngineSidebar({
   onDelete: (id: string) => void
   remaining: number
   limit: number
-  plan: EnginePlan
 }) {
-  const { user } = useAuth()
+  const { user, refresh } = useAuth()
+  const { push } = useToast()
+  const [baazexId, setBaazexId] = useState('')
+  const [savingId, setSavingId] = useState(false)
+
+  useEffect(() => {
+    setBaazexId(user?.baazexId ?? '')
+  }, [user?.baazexId])
+
+  async function saveBaazexId() {
+    if (!user) return
+    const trimmed = baazexId.trim()
+    if (!trimmed) {
+      push('error', 'Enter your Baazex ID.')
+      return
+    }
+    setSavingId(true)
+    try {
+      const saved = await authService.updateProfile(user.id, { baazexId: trimmed })
+      if (!saved) throw new Error('Could not save the Baazex ID.')
+      await refresh()
+      push('success', 'Baazex ID saved')
+    } catch (error) {
+      push('error', error instanceof Error ? error.message : 'Could not save the Baazex ID.')
+    } finally {
+      setSavingId(false)
+    }
+  }
   const visible = conversations.filter((item) => item.title.toLowerCase().includes(query.toLowerCase()))
 
   return (
@@ -114,7 +143,7 @@ export function EngineSidebar({
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{user.fullName}</span>
                 <span className="block text-[11px] text-ink/40">
-                  {plan === 'basic' ? `${remaining} of ${limit} on Basic` : `${remaining} of ${limit} free`}
+                  {remaining} of {limit}
                 </span>
               </span>
             )}
@@ -125,11 +154,46 @@ export function EngineSidebar({
             {collapsed ? null : (
               <span>
                 <span className="block text-sm font-semibold">Sign in</span>
-                <span className="block text-[11px] text-ink/40">{remaining} of {limit} free</span>
+                <span className="block text-[11px] text-ink/40">{remaining} of {limit}</span>
               </span>
             )}
           </Link>
         )}
+        {user && !collapsed ? (
+          <div className="mt-2 space-y-2">
+            <a
+              href={BAAZEX_ACCOUNT_URL}
+              target="_blank"
+              rel="noreferrer"
+              className="flex h-10 items-center justify-center gap-1.5 rounded-xl bg-white text-xs font-semibold text-accent ring-1 ring-white/80 transition hover:bg-white/80"
+            >
+              Open a Baazex account
+              <ExternalLink className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <form
+              className="space-y-2"
+              onSubmit={(event) => {
+                event.preventDefault()
+                void saveBaazexId()
+              }}
+            >
+              <input
+                aria-label="Baazex ID"
+                className="h-10 w-full rounded-xl border border-white/80 bg-white px-3 text-xs text-ink outline-none placeholder:text-muted focus:border-bright"
+                placeholder="Baazex ID"
+                value={baazexId}
+                onChange={(event) => setBaazexId(event.target.value)}
+              />
+              <button
+                type="submit"
+                className="h-10 w-full rounded-xl bg-baazex text-xs font-semibold text-on-button disabled:opacity-60"
+                disabled={savingId}
+              >
+                {savingId ? 'Saving…' : 'Save Baazex ID'}
+              </button>
+            </form>
+          </div>
+        ) : null}
       </div>
     </aside>
   )

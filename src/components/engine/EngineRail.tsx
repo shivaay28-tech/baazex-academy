@@ -1,4 +1,4 @@
-import { APP_SHORT_NAME, COMPANY_HOST, COMPANY_URL, DISCLAIMER } from '@/utils/constants'
+import { COMPANY_HOST, COMPANY_URL, DISCLAIMER } from '@/utils/constants'
 import { MonitorSmartphone, Shield } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -11,7 +11,7 @@ export function EngineRail() {
           A directional call from the live TradingView price.
         </p>
         <p className="mt-2 text-sm leading-relaxed text-muted">
-          Bias, entry, stop, and target use the live TradingView close. Results are not guaranteed. Basic is $30 after 5 free questions and includes a free {APP_SHORT_NAME} trading account.
+          Bias, entry, stop, and target use the live TradingView close. Results are not guaranteed. Five questions are included. A Baazex deposit adds 15% of the amount as questions.
         </p>
         <div className="mt-4 grid grid-cols-3 gap-2 text-center">
           <div>

@@ -1,4 +1,5 @@
 import { handleAdminUsers } from './adminUsers.js'
+import { handleDeposits } from './deposits.js'
 import type { IncomingMessage, ServerResponse } from 'node:http'
 import type { Plugin } from 'vite'
 import { loadEnv } from 'vite'
@@ -12,9 +13,14 @@ function readBody(req: IncomingMessage) {
   })
 }
 
-async function adapt(req: IncomingMessage, res: ServerResponse) {
+async function adapt(
+  req: IncomingMessage,
+  res: ServerResponse,
+  handle: (request: Request) => Promise<Response>,
+  path: string,
+) {
   const raw = await readBody(req)
-  const request = new Request('http://local/api/admin/users', {
+  const request = new Request(`http://local${path}`, {
     method: req.method ?? 'POST',
     headers: {
       'content-type': req.headers['content-type'] ?? 'application/json',
@@ -22,7 +28,7 @@ async function adapt(req: IncomingMessage, res: ServerResponse) {
     },
     body: req.method === 'GET' || req.method === 'HEAD' ? undefined : raw || undefined,
   })
-  const response = await handleAdminUsers(request)
+  const response = await handle(request)
   res.statusCode = response.status
   response.headers.forEach((value, key) => {
     res.setHeader(key, value)
@@ -44,13 +50,19 @@ export function adminApiPlugin(): Plugin {
     configureServer(server) {
       applyEnv(server.config.root, server.config.mode)
       server.middlewares.use('/api/admin/users', (req, res) => {
-        void adapt(req, res)
+        void adapt(req, res, handleAdminUsers, '/api/admin/users')
+      })
+      server.middlewares.use('/api/admin/deposits', (req, res) => {
+        void adapt(req, res, handleDeposits, '/api/admin/deposits')
       })
     },
     configurePreviewServer(server) {
       applyEnv(server.config.root, server.config.mode)
       server.middlewares.use('/api/admin/users', (req, res) => {
-        void adapt(req, res)
+        void adapt(req, res, handleAdminUsers, '/api/admin/users')
+      })
+      server.middlewares.use('/api/admin/deposits', (req, res) => {
+        void adapt(req, res, handleDeposits, '/api/admin/deposits')
       })
     },
   }

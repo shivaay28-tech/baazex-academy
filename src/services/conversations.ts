@@ -2,8 +2,8 @@ import { authService } from '@/services/auth'
 import { isSupabaseEnabled } from '@/services/backend'
 import { getSupabase } from '@/services/supabase'
 import { readJson, writeJson } from '@/services/storage'
-import type { AiConversation, AiMessage, EnginePlan } from '@/types'
-import { BASIC_QUESTIONS, FREE_QUESTIONS, STORAGE_KEYS } from '@/utils/constants'
+import type { AiConversation, AiMessage } from '@/types'
+import { FREE_QUESTIONS, STORAGE_KEYS } from '@/utils/constants'
 import { uid } from '@/utils/format'
 
 interface CreditState {
@@ -82,8 +82,8 @@ export const conversationService = {
     })
   },
 
-  creditLimit(plan: EnginePlan = 'free') {
-    return plan === 'basic' ? BASIC_QUESTIONS : FREE_QUESTIONS
+  creditLimit(bonusQuestions = 0) {
+    return FREE_QUESTIONS + Math.max(0, bonusQuestions)
   },
 
   used(userId?: string) {
@@ -95,8 +95,8 @@ export const conversationService = {
     return credits.guestUsed
   },
 
-  remaining(plan: EnginePlan = 'free', userId?: string) {
-    return Math.max(0, this.creditLimit(plan) - this.used(userId))
+  remaining(bonusQuestions = 0, userId?: string) {
+    return Math.max(0, this.creditLimit(bonusQuestions) - this.used(userId))
   },
 
   async consume(userId?: string) {

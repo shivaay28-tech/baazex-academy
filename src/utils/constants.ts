@@ -6,6 +6,7 @@ export const ENGINE_NAME = BRAND.engineName
 export const COMPANY_NAME = BRAND.company
 export const COMPANY_URL = BRAND.url
 export const COMPANY_HOST = BRAND.host
+export const BAAZEX_ACCOUNT_URL = 'https://my.baazex.com/referral?sponsorcode=IB_026633'
 export const PASSING_SCORE = 70
 
 export const DISCLAIMER = `Trading forex and CFDs involves significant risk and may not be suitable for all investors. ${APP_NAME} content is provided for educational purposes only and does not constitute investment advice, a recommendation, or a guarantee of trading results.`

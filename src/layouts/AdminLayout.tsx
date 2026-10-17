@@ -9,6 +9,7 @@ const subnav = [
   { to: '/admin/modules', label: 'Modules' },
   { to: '/admin/lessons', label: 'Lessons' },
   { to: '/admin/students', label: 'Students' },
+  { to: '/admin/credits', label: 'Credits' },
   { to: '/admin/quizzes', label: 'Quizzes' },
   { to: '/admin/certificates', label: 'Certificates' },
   { to: '/admin/reports', label: 'Reports' },

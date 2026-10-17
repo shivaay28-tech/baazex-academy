@@ -45,6 +45,8 @@ export function mapProfile(row: Record<string, unknown>): SessionUser {
     },
     plan: row.plan === 'basic' ? 'basic' : 'free',
     questionsUsed: typeof row.questions_used === 'number' ? row.questions_used : 0,
+    baazexId: text(row.baazex_id),
+    bonusQuestions: typeof row.bonus_questions === 'number' ? row.bonus_questions : Number(row.bonus_questions) || 0,
   }
 }
 

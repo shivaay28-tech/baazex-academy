@@ -24,6 +24,8 @@ export interface User {
   emailPreferences: EmailPreferences
   plan?: EnginePlan
   questionsUsed?: number
+  baazexId?: string
+  bonusQuestions?: number
 }
 
 export type SessionUser = Omit<User, 'password'>

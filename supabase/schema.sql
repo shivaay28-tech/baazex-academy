@@ -165,8 +165,13 @@ returns trigger
 language plpgsql
 as $$
 begin
+  if auth.uid() is null then
+    return new;
+  end if;
   if not public.is_admin() then
     new.role := old.role;
+    new.plan := old.plan;
+    new.bonus_questions := old.bonus_questions;
     if new.questions_used < old.questions_used then
       new.questions_used := old.questions_used;
     end if;
@@ -392,3 +397,18 @@ grant select, insert, update, delete on public.courses, public.categories, publi
 grant execute on function public.is_admin() to anon, authenticated;
 grant execute on function public.ensure_catalog_seed(jsonb) to anon, authenticated;
 grant execute on function public.consume_question() to authenticated;
+
+alter table public.profiles add column if not exists baazex_id text not null default '';
+alter table public.profiles add column if not exists bonus_questions integer not null default 0;
+
+create table if not exists public.deposits (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references public.profiles (id) on delete cascade,
+  baazex_id text not null,
+  amount_usd numeric not null check (amount_usd > 0),
+  questions_added integer not null check (questions_added > 0),
+  reference text not null unique,
+  created_at timestamptz not null default now()
+);
+
+alter table public.deposits enable row level security;
