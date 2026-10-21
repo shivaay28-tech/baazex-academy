@@ -1,6 +1,4 @@
-import { APP_SHORT_NAME } from '@/utils/constants'
 import { cn } from '@/utils/cn'
-import { useId } from 'react'
 
 export function Logo({
   light = false,
@@ -11,41 +9,21 @@ export function Logo({
   compact?: boolean
   className?: string
 }) {
-  const markId = useId()
+  if (compact) {
+    return (
+      <img
+        src="/brand/logo-mark.png"
+        alt=""
+        className={cn('h-9 w-9 object-contain', className)}
+      />
+    )
+  }
+
   return (
-    <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <span className="relative grid h-9 w-9 place-items-center overflow-hidden rounded-xl bg-baazex shadow-float">
-        <svg viewBox="0 0 36 36" className="h-7 w-7" aria-hidden="true">
-          <path
-            d="M9 26V10h9.2c3.6 0 5.9 2.1 5.9 5.2 0 1.9-1 3.5-2.7 4.3 2.1.8 3.5 2.6 3.5 4.8 0 3.3-2.5 6.1-6.7 6.1H9Zm4.6-8.2h4.2c1.6 0 2.5-.8 2.5-2.1s-.9-2-2.5-2h-4.2v4.1Zm0 3.7v4.9h4.9c1.8 0 2.9-1 2.9-2.5s-1.1-2.4-2.9-2.4h-4.9Z"
-            fill={`url(#${markId})`}
-          />
-          <path
-            d="M7 28 13.5 21.5l4.2 3.4L24 16.5l5 4.6"
-            stroke="#8FD4FF"
-            strokeWidth="1.7"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            fill="none"
-          />
-          <defs>
-            <linearGradient id={markId} x1="9" y1="10" x2="28" y2="30">
-              <stop stopColor="#FFFFFF" />
-              <stop offset="1" stopColor="#D6ECFF" />
-            </linearGradient>
-          </defs>
-        </svg>
-      </span>
-      {compact ? null : (
-        <span className="leading-tight">
-          <span className={cn('block text-[13px] font-extrabold tracking-tight', light ? 'text-white' : 'text-ink')}>
-            {APP_SHORT_NAME}
-          </span>
-          <span className={cn('block text-[11px] font-semibold tracking-[0.18em] uppercase', light ? 'text-white/70' : 'text-accent')}>
-            Academy
-          </span>
-        </span>
-      )}
-    </span>
+    <img
+      src={light ? '/brand/logo-light.png' : '/brand/logo-ink.png'}
+      alt="Baazex Academy"
+      className={cn('h-10 w-auto sm:h-12', className)}
+    />
   )
 }

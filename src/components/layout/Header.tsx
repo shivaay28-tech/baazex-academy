@@ -1,3 +1,4 @@
+import { SocialBar } from '@/components/layout/SocialDock'
 import { Logo } from '@/components/ui/Logo'
 import { useAuth } from '@/context/AuthContext'
 import { APP_NAME } from '@/utils/constants'
@@ -21,11 +22,11 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 border-b border-white/10 bg-navy/95 text-mist shadow-[0_12px_40px_-24px_rgb(6_21_43_/_0.65)] backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
-        <Link to="/" aria-label={`${APP_NAME} home`}>
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-2 px-3 sm:h-16 lg:px-4 xl:gap-3 xl:px-6">
+        <Link to="/" aria-label={`${APP_NAME} home`} className="shrink-0 [&_img]:h-9 xl:[&_img]:h-12">
           <Logo light />
         </Link>
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        <nav className="hidden shrink-0 items-center gap-0.5 lg:flex xl:gap-1" aria-label="Primary">
           {links.map((link) => (
             <NavLink
               key={link.to}
@@ -33,7 +34,7 @@ export function Header() {
               end={link.to === '/'}
               className={({ isActive }) =>
                 cn(
-                  'rounded-lg px-3 py-2 text-sm font-semibold tracking-wide transition',
+                  'whitespace-nowrap rounded-lg px-2 py-1.5 text-[13px] font-semibold transition xl:px-3 xl:py-2 xl:text-sm xl:tracking-wide',
                   isActive ? 'bg-baazex text-white shadow-float' : 'text-mist/75 hover:text-white',
                 )
               }
@@ -42,7 +43,8 @@ export function Header() {
             </NavLink>
           ))}
         </nav>
-        <div className="hidden items-center gap-2 lg:flex">
+        <div className="hidden shrink-0 items-center gap-1.5 lg:flex xl:gap-2">
+          <SocialBar compact />
           {user ? (
             <>
               <Link
@@ -94,7 +96,8 @@ export function Header() {
                 {link.label}
               </NavLink>
             ))}
-            <div className="mt-3 flex flex-col gap-2">
+            <div className="mt-3 flex flex-col items-start gap-2">
+              <SocialBar />
               {user ? (
                 <Link
                   to="/engine"
