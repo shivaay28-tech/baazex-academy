@@ -9,6 +9,7 @@ import { courseCover } from '@/data/media'
 import { catalogService } from '@/services/catalog'
 import { progressService } from '@/services/progress'
 import { APP_NAME } from '@/utils/constants'
+import { lessonNotesPdf } from '@/utils/lessonPdf'
 import { pageBackgroundStyle } from '@/utils/pageBackground'
 import { findLesson, getAdjacentLessons, getCourseLessons } from '@/utils/course'
 import { ChevronLeft, ChevronRight, Download, Menu, PanelLeftClose } from 'lucide-react'
@@ -65,17 +66,20 @@ export function LessonViewerPage() {
   }
 
   function downloadResource() {
-    const blob = new Blob(
-      [`${APP_NAME} resource\n\n${activeLesson.title}\n\n${activeLesson.content.join('\n\n')}\n\nEducational use only.`],
-      { type: 'text/plain' },
-    )
+    const blob = lessonNotesPdf({
+      academy: APP_NAME,
+      courseTitle: activeCourse.title,
+      lessonTitle: activeLesson.title,
+      summary: activeLesson.summary,
+      paragraphs: activeLesson.content,
+    })
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `${activeLesson.slug}-notes.txt`
+    anchor.download = `${activeLesson.slug}-notes.pdf`
     anchor.click()
-    URL.revokeObjectURL(url)
-    push('success', 'Resource downloaded')
+    window.setTimeout(() => URL.revokeObjectURL(url), 1500)
+    push('success', 'PDF downloaded')
   }
 
   const lessons = getCourseLessons(course)
@@ -151,7 +155,7 @@ export function LessonViewerPage() {
 
           <div className="mt-8 flex flex-wrap gap-3">
             <Button className="w-full sm:w-auto" variant="secondary" icon={<Download className="h-4 w-4" />} onClick={downloadResource}>
-              Download resources
+              Download PDF
             </Button>
             <Button className="w-full sm:w-auto" loading={saving} onClick={markComplete}>
               {completed ? 'Completed · continue' : 'Mark as complete'}
