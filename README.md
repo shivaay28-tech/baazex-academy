@@ -1,6 +1,6 @@
 # Baazex Academy
 
-A premium educational web application for **Baazex Financial Services L.L.C.** Learners study forex, CFDs, market analysis, risk management, MetaTrader 5, and introducing-broker standards. Content is educational only and does not constitute investment advice.
+A premium educational web application for **Baazex.** Learners study forex, CFDs, market analysis, risk management, MetaTrader 5, and introducing-broker standards. Content is educational only and does not constitute investment advice.
 
 This frontend is a complete React application. Login, courses, and progress use **Supabase Auth + Postgres** when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set. Without those keys, the same screens run on a localStorage mock so `npm run dev` still works.
 

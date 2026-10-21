@@ -1,7 +1,8 @@
 import { MobileNavigation } from '@/components/layout/MobileNavigation'
 import { Sidebar } from '@/components/layout/Sidebar'
+import { pageBackgroundStyle } from '@/utils/pageBackground'
 import { useState } from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 const subnav = [
   { to: '/admin', label: 'Dashboard' },
@@ -18,9 +19,10 @@ const subnav = [
 export function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [query, setQuery] = useState('')
+  const { pathname } = useLocation()
 
   return (
-    <div className="atmosphere flex h-dvh overflow-hidden">
+    <div className="atmosphere bg-page flex h-dvh overflow-hidden" style={pageBackgroundStyle(pathname)}>
       <div className="hidden md:block">
         <Sidebar
           admin

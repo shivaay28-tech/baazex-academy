@@ -225,7 +225,7 @@ for (const academy of academies) {
       readmePath,
       readme
         .replaceAll('Baazex Academy', academy.name)
-        .replaceAll('Baazex Financial Services L.L.C', academy.company)
+        .replaceAll('for **Baazex.**', `for **${academy.company}.**`)
         .replaceAll('https://baazex-academy.vercel.app/', academy.url)
         .replaceAll('student@baazex.com', `student@${academy.host}`)
         .replaceAll('admin@baazex.com', `admin@${academy.host}`),
@@ -238,7 +238,7 @@ for (const academy of academies) {
       envPath,
       env
         .replaceAll('Baazex Academy', academy.name)
-        .replaceAll('Baazex Financial Services L.L.C', academy.company)
+        .replaceAll('VITE_COMPANY_NAME=Baazex', `VITE_COMPANY_NAME=${academy.company}`)
         .replaceAll('https://www.baazex.com', academy.url)
         .replaceAll('https://api.baazex.com/academy/v1', `${academy.url}/academy/v1`),
     )

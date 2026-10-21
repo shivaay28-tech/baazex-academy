@@ -155,17 +155,12 @@
       var(--color-canvas);
   }
 
-  .atmosphere::after {
-    content: "";
-    pointer-events: none;
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    background-image:
-      linear-gradient(rgb(6 21 43 / 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(6 21 43 / 0.04) 1px, transparent 1px);
-    background-size: 72px 72px;
-    mask-image: radial-gradient(ellipse at 50% 20%, black 8%, transparent 70%);
+  .atmosphere.bg-page::before {
+    background:
+      radial-gradient(980px 520px at 8% -8%, rgb(var(--glow) / 0.08), transparent 58%),
+      radial-gradient(820px 480px at 96% 4%, rgb(0 163 255 / 0.06), transparent 52%),
+      linear-gradient(rgb(244 248 252 / 0.4), rgb(244 248 252 / 0.55)),
+      var(--page-bg) center / cover no-repeat;
   }
 
   .glass {
@@ -292,8 +287,7 @@
 
   body::before,
   body::after,
-  .atmosphere::before,
-  .atmosphere::after {
+  .atmosphere::before {
     display: none !important;
   }
 

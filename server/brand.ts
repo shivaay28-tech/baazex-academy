@@ -3,7 +3,7 @@ export const BRAND = {
   name: 'Baazex Academy',
   shortName: 'Baazex',
   engineName: 'Baazex Engine',
-  company: 'Baazex Financial Services L.L.C',
+  company: 'Baazex',
   url: 'https://www.baazex.com',
   host: 'baazex.com',
   storagePrefix: 'baazex.academy',

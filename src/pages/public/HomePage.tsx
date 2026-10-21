@@ -1,6 +1,5 @@
 import { CategoryCard } from '@/components/course/CategoryCard'
 import { CourseCard } from '@/components/course/CourseCard'
-import { HeroVisual } from '@/components/home/HeroVisual'
 import { Seo } from '@/components/Seo'
 import { Button } from '@/components/ui/Button'
 import { Disclaimer } from '@/components/ui/Disclaimer'
@@ -93,9 +92,17 @@ export function HomePage() {
         title="Learn Forex and Market Analysis"
         description={`${APP_NAME} offers structured education on forex, CFDs, analysis, risk management, and MetaTrader 5. Educational content only.`}
       />
-      <section className="gradient-hero relative overflow-hidden">
-        <div className="relative mx-auto grid max-w-7xl min-w-0 items-center gap-10 px-4 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-12 lg:py-28">
-          <div className="min-w-0">
+      <section className="relative isolate overflow-hidden">
+        <img
+          src="/images/hero-person.jpg"
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover object-[72%_center]"
+        />
+        <div className="absolute inset-0 bg-linear-to-b from-[#06152b]/80 via-[#06152b]/55 to-[#06152b]/35 lg:hidden" />
+        <div className="absolute inset-0 hidden bg-linear-to-r from-[#06152b] from-[18%] via-[#06152b]/35 via-[42%] to-transparent lg:block" />
+        <div className="absolute inset-x-0 bottom-0 h-28 bg-linear-to-t from-[#06152b] to-transparent" />
+        <div className="relative mx-auto flex min-h-[34rem] max-w-7xl items-center px-4 py-16 sm:min-h-[40rem] sm:px-6 sm:py-24 lg:min-h-[46rem]">
+          <div className="min-w-0 max-w-xl lg:max-w-2xl">
             <h1 className="display text-[1.85rem] leading-[1.12] font-semibold text-white sm:text-5xl sm:leading-tight lg:text-[68px] lg:leading-[0.98]">
               Learn the Markets. <span className="text-gradient">Trade with Greater Understanding.</span>
             </h1>
@@ -111,9 +118,6 @@ export function HomePage() {
               </Button>
             </div>
             <p className="mt-6 max-w-xl text-xs leading-relaxed text-mist/50">{DISCLAIMER}</p>
-          </div>
-          <div className="min-w-0">
-            <HeroVisual />
           </div>
         </div>
       </section>
