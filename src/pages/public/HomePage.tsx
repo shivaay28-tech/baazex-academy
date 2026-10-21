@@ -94,7 +94,6 @@ export function HomePage() {
         description={`${APP_NAME} offers structured education on forex, CFDs, analysis, risk management, and MetaTrader 5. Educational content only.`}
       />
       <section className="gradient-hero relative overflow-hidden">
-        <div className="grid-fade absolute inset-0" />
         <div className="relative mx-auto grid max-w-7xl min-w-0 items-center gap-10 px-4 py-12 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-12 lg:py-28">
           <div className="min-w-0">
             <h1 className="display text-[1.85rem] leading-[1.12] font-semibold text-white sm:text-5xl sm:leading-tight lg:text-[68px] lg:leading-[0.98]">

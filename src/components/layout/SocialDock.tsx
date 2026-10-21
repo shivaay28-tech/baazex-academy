@@ -34,7 +34,7 @@ export function SocialBar({ compact = false }: { compact?: boolean }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={item.label}
-            className="grid h-6 w-6 shrink-0 place-items-center rounded-md bg-[#1a1a1e] transition hover:bg-[#26262c]"
+            className="grid h-5 w-5 shrink-0 place-items-center rounded-md bg-[#1a1a1e] transition hover:bg-[#26262c] xl:h-6 xl:w-6"
           >
             <item.icon />
           </a>
@@ -63,7 +63,7 @@ export function SocialBar({ compact = false }: { compact?: boolean }) {
 
 function InstagramIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-3 w-3 xl:h-3.5 xl:w-3.5" aria-hidden>
       <defs>
         <linearGradient id="ig-dock" x1="0" y1="1" x2="1" y2="0">
           <stop offset="0%" stopColor="#f9ce34" />
@@ -80,7 +80,7 @@ function InstagramIcon() {
 
 function YouTubeIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-3 w-3 xl:h-3.5 xl:w-3.5" aria-hidden>
       <rect x="2" y="5.5" width="20" height="13" rx="3.5" fill="#FF0033" />
       <path fill="#fff" d="M10.2 9.2v5.6l4.8-2.8-4.8-2.8z" />
     </svg>
@@ -89,7 +89,7 @@ function YouTubeIcon() {
 
 function TelegramIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-3 w-3 xl:h-3.5 xl:w-3.5" aria-hidden>
       <circle cx="12" cy="12" r="10" fill="#2AABEE" />
       <path
         fill="#fff"
@@ -101,7 +101,7 @@ function TelegramIcon() {
 
 function FacebookIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-3 w-3 xl:h-3.5 xl:w-3.5" aria-hidden>
       <circle cx="12" cy="12" r="10" fill="#1877F2" />
       <path
         fill="#fff"
@@ -113,7 +113,7 @@ function FacebookIcon() {
 
 function WhatsAppIcon() {
   return (
-    <svg viewBox="0 0 24 24" className="h-3.5 w-3.5" aria-hidden>
+    <svg viewBox="0 0 24 24" className="h-3 w-3 xl:h-3.5 xl:w-3.5" aria-hidden>
       <path
         fill="currentColor"
         d="M12.04 3.2A8.78 8.78 0 0 0 3.3 12a8.7 8.7 0 0 0 1.16 4.32L3.2 20.8l4.6-1.2A8.8 8.8 0 0 0 12.04 20.8 8.78 8.78 0 0 0 20.8 12a8.78 8.78 0 0 0-8.76-8.8zm5.1 12.35c-.22.62-1.28 1.18-1.78 1.26-.46.07-1.03.1-1.66-.1-.38-.13-.87-.28-1.5-.55-2.63-1.14-4.35-3.78-4.48-3.96-.13-.17-1.06-1.41-1.06-2.7 0-1.28.67-1.9.91-2.16.22-.25.58-.36.78-.36h.55c.18 0 .41-.07.64.49.24.58.8 2.02.87 2.16.08.15.12.32.02.51-.1.2-.14.31-.28.48-.14.17-.3.38-.43.51-.14.15-.29.3-.13.59.17.29.76 1.25 1.63 2.03 1.12 1 2.06 1.31 2.35 1.46.3.15.46.12.63-.07.17-.2.73-.85.92-1.15.2-.29.39-.25.64-.15.26.1 1.67.79 1.95.93.29.15.48.22.55.34.08.12.08.7-.15 1.32z"
