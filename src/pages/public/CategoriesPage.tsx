@@ -1,5 +1,7 @@
 import { CategoryCard } from '@/components/course/CategoryCard'
 import { Seo } from '@/components/Seo'
+import { PhotoBanner } from '@/components/ui/PhotoBanner'
+import { media } from '@/data/media'
 import { useAcademy } from '@/context/AcademyContext'
 import { categories } from '@/data/categories'
 import { APP_NAME } from '@/utils/constants'
@@ -9,14 +11,16 @@ export function CategoriesPage() {
   const { courses } = useAcademy()
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+    <div>
       <Seo title="Course categories" description={`Explore ${APP_NAME} categories covering forex, markets, analysis, risk, psychology, MT5, and introducing brokers.`} />
-      <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">Curriculum map</p>
-      <h1 className="mt-2 text-3xl font-extrabold text-ink sm:text-4xl">Course categories</h1>
-      <p className="mt-3 max-w-2xl text-sm text-muted">
-        Each category lists estimated duration, difficulty, and the number of lessons currently published.
-      </p>
-      <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <PhotoBanner
+        image={media.study}
+        alt="A quiet briefing room used for academy study"
+        eyebrow="Curriculum map"
+        title="Course categories"
+        text="Each category lists estimated duration, difficulty, and the number of lessons currently published."
+      />
+      <div className="mx-auto mt-8 grid max-w-7xl gap-5 px-4 pb-12 sm:grid-cols-2 sm:px-6 xl:grid-cols-4">
         {categories.map((category) => {
           const lessonCount = courses
             .filter((course) => course.categoryId === category.id)

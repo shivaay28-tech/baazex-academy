@@ -2,9 +2,9 @@ import { cn } from '@/utils/cn'
 import type { Difficulty } from '@/types'
 
 const styles: Record<Difficulty, string> = {
-  Beginner: 'border border-bright/25 bg-bright/10 text-accent',
-  Intermediate: 'border border-baazex/40 bg-baazex/10 text-accent',
-  Advanced: 'border border-baazex/30 bg-baazex/10 text-accent',
+  Beginner: 'bg-white text-navy ring-1 ring-navy/10',
+  Intermediate: 'bg-white text-accent ring-1 ring-baazex/25',
+  Advanced: 'bg-navy text-white',
 }
 
 export function DifficultyBadge({ level }: { level: Difficulty }) {

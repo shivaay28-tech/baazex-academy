@@ -55,7 +55,7 @@ export function Sidebar({
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-bright/15 bg-navy/90 text-ink shadow-[inset_-1px_0_0_rgb(var(--glow)_/_0.12)] backdrop-blur-xl transition-all duration-200',
+        'flex h-full flex-col border-r border-white/10 bg-navy text-mist transition-all duration-200',
         collapsed ? 'w-[76px]' : 'w-[280px]',
       )}
     >
@@ -66,7 +66,7 @@ export function Sidebar({
         <button
           type="button"
           onClick={onToggle}
-          className="rounded-lg p-1.5 text-ink/60 hover:bg-white/10 hover:text-ink"
+          className="rounded-lg p-1.5 text-mist/60 hover:bg-white/10 hover:text-white"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
@@ -81,7 +81,7 @@ export function Sidebar({
             className="flex h-11 w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold hover:bg-white/10"
           >
             {admin ? 'Manage catalogue' : 'Continue learning'}
-            <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-ink/50">⌘K</span>
+            <span className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-mist/50">⌘K</span>
           </button>
           <label className="mt-3 flex h-10 items-center gap-2 rounded-xl bg-white/70 px-3 text-ink/50">
             <Search className="h-4 w-4 shrink-0" />
@@ -104,7 +104,7 @@ export function Sidebar({
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold',
-                isActive ? 'bg-baazex text-on-button' : 'text-ink/70 hover:bg-white/8 hover:text-ink',
+                isActive ? 'bg-baazex text-white' : 'text-mist/70 hover:bg-white/8 hover:text-white',
                 collapsed && 'justify-center px-0',
               )
             }
@@ -116,29 +116,29 @@ export function Sidebar({
 
         {!admin && !collapsed ? (
           <>
-            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-ink/35 uppercase">Recent</p>
+            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-mist/40 uppercase">Recent</p>
             <div className="mt-2 space-y-1">
               {recent.length ? (
                 recent.map((course) => (
                   <NavLink
                     key={course.id}
                     to={`/courses/${course.slug}`}
-                    className="block truncate rounded-lg px-3 py-2 text-xs text-ink/65 hover:bg-white/8 hover:text-ink"
+                    className="block truncate rounded-lg px-3 py-2 text-xs text-mist/70 hover:bg-white/8 hover:text-white"
                   >
                     {course.title}
                   </NavLink>
                 ))
               ) : (
-                <p className="px-3 text-xs text-ink/40">No enrolments yet.</p>
+                <p className="px-3 text-xs text-mist/45">No enrolments yet.</p>
               )}
             </div>
-            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-ink/35 uppercase">Categories</p>
+            <p className="mt-5 px-3 text-[10px] font-bold tracking-[0.18em] text-mist/40 uppercase">Categories</p>
             <div className="mt-2 flex flex-wrap gap-1.5 px-2">
               {categories.slice(0, 6).map((category) => (
                 <NavLink
                   key={category.id}
                   to={`/categories/${category.slug}`}
-                  className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-ink/70 hover:border-bright/40 hover:text-ink"
+                  className="rounded-full border border-white/10 px-2.5 py-1 text-[11px] text-mist/75 hover:border-bright/40 hover:text-white"
                 >
                   {category.name.split(' ')[0]}
                 </NavLink>
@@ -150,13 +150,13 @@ export function Sidebar({
 
       <div className="border-t border-white/10 p-3">
         <div className={cn('flex items-center gap-3 rounded-xl bg-white/5 p-2', collapsed && 'justify-center')}>
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-baazex text-xs font-bold text-on-button">
+          <span className="grid h-9 w-9 place-items-center rounded-full bg-baazex text-xs font-bold text-white">
             {initials(user?.fullName ?? 'BA')}
           </span>
           {collapsed ? null : (
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold">{user?.fullName}</p>
-              <p className="truncate text-[11px] text-ink/45">{user?.email}</p>
+              <p className="truncate text-[11px] text-mist/50">{user?.email}</p>
             </div>
           )}
         </div>
@@ -166,7 +166,7 @@ export function Sidebar({
             void logout().then(() => navigate('/'))
           }}
           className={cn(
-            'mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-ink/60 hover:bg-white/8 hover:text-ink',
+            'mt-2 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-sm text-mist/65 hover:bg-white/8 hover:text-white',
             collapsed && 'justify-center',
           )}
         >

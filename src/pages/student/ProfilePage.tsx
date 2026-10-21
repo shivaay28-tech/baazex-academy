@@ -61,7 +61,7 @@ export function ProfilePage() {
 
       <section className="mt-8 rounded-3xl panel p-6">
         <div className="flex items-center gap-4">
-          <span className="grid h-16 w-16 place-items-center rounded-full bg-navy text-lg font-bold text-ink">
+          <span className="grid h-16 w-16 place-items-center rounded-full bg-navy text-lg font-bold text-white">
             {initials(fullName)}
           </span>
           <div>

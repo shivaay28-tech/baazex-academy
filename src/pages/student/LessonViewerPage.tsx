@@ -5,6 +5,7 @@ import { Disclaimer } from '@/components/ui/Disclaimer'
 import { useAcademy } from '@/context/AcademyContext'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
+import { courseCover } from '@/data/media'
 import { catalogService } from '@/services/catalog'
 import { progressService } from '@/services/progress'
 import { APP_NAME } from '@/utils/constants'
@@ -109,7 +110,7 @@ export function LessonViewerPage() {
       ) : null}
 
       <div className="min-w-0 flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-bright/15 bg-navy/78 px-4 py-3 backdrop-blur">
+        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 border-b border-line bg-white/95 px-4 py-3 text-ink backdrop-blur">
           <button
             type="button"
             className="grid h-10 w-10 place-items-center rounded-lg hover:bg-white/8 lg:hidden"
@@ -128,13 +129,13 @@ export function LessonViewerPage() {
         </div>
 
         <div className="mx-auto max-w-3xl px-4 py-8">
-          <div className="overflow-hidden rounded-3xl border border-bright/20 bg-navy shadow-[inset_0_0_80px_rgb(var(--glow)_/_0.12)]">
-            <div className="flex aspect-video items-center justify-center bg-linear-to-br from-navy via-navy-700 to-baazex">
-              <div className="text-center text-ink">
-                <p className="text-xs tracking-[0.18em] text-ink uppercase">Lesson media</p>
-                <p className="mt-2 text-lg font-bold">{lesson.title}</p>
-                <p className="mt-1 text-xs text-ink/60">{lesson.durationMinutes} minute educational module</p>
-              </div>
+          <div className="relative aspect-video overflow-hidden rounded-3xl bg-navy">
+            <img src={courseCover(course.categoryId)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-navy/55" />
+            <div className="relative flex h-full flex-col items-center justify-center px-6 text-center text-white">
+              <p className="text-xs tracking-[0.18em] text-bright uppercase">Lesson</p>
+              <p className="mt-2 text-lg font-semibold">{lesson.title}</p>
+              <p className="mt-1 text-xs text-mist/80">{lesson.durationMinutes} minute educational module</p>
             </div>
           </div>
 

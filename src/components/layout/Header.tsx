@@ -20,10 +20,10 @@ export function Header() {
   const { user } = useAuth()
 
   return (
-    <header className="sticky top-0 z-40 border-b border-baazex/15 bg-white/90 shadow-[0_12px_40px_-24px_rgb(var(--glow)_/_0.45)] backdrop-blur-xl">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-navy/95 text-mist shadow-[0_12px_40px_-24px_rgb(6_21_43_/_0.65)] backdrop-blur-xl">
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6">
         <Link to="/" aria-label={`${APP_NAME} home`}>
-          <Logo />
+          <Logo light />
         </Link>
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
           {links.map((link) => (
@@ -34,7 +34,7 @@ export function Header() {
               className={({ isActive }) =>
                 cn(
                   'rounded-lg px-3 py-2 text-sm font-semibold tracking-wide transition',
-                  isActive ? 'bg-baazex text-on-button shadow-float' : 'text-ink/70 hover:text-accent',
+                  isActive ? 'bg-baazex text-white shadow-float' : 'text-mist/75 hover:text-white',
                 )
               }
             >
@@ -47,7 +47,7 @@ export function Header() {
             <>
               <Link
                 to="/dashboard"
-                className="inline-flex h-9 items-center rounded-lg border border-baazex/25 px-3 text-sm font-semibold text-accent hover:bg-baazex/5"
+                className="inline-flex h-9 items-center rounded-lg border border-white/20 px-3 text-sm font-semibold text-white hover:bg-white/10"
               >
                 Dashboard
               </Link>
@@ -60,7 +60,7 @@ export function Header() {
             </>
           ) : (
             <>
-              <Link to="/login" className="px-3 text-sm font-semibold text-ink/80 hover:text-accent">
+              <Link to="/login" className="px-3 text-sm font-semibold text-mist/80 hover:text-white">
                 Login
               </Link>
               <Link
@@ -74,7 +74,7 @@ export function Header() {
         </div>
         <button
           type="button"
-          className="grid h-11 w-11 place-items-center rounded-lg text-accent lg:hidden"
+          className="grid h-11 w-11 place-items-center rounded-lg text-white lg:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? 'Close menu' : 'Open menu'}
         >
@@ -82,14 +82,14 @@ export function Header() {
         </button>
       </div>
       {open ? (
-        <div className="max-h-[min(80dvh,calc(100dvh-3.5rem))] overflow-y-auto border-t border-line bg-white px-4 py-4 lg:hidden">
+        <div className="max-h-[min(80dvh,calc(100dvh-3.5rem))] overflow-y-auto border-t border-white/10 bg-navy px-4 py-4 lg:hidden">
           <div className="flex flex-col gap-1">
             {links.map((link) => (
               <NavLink
                 key={link.to}
                 to={link.to}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-3 py-3 text-sm font-semibold text-ink"
+                className="rounded-lg px-3 py-3 text-sm font-semibold text-mist"
               >
                 {link.label}
               </NavLink>
@@ -99,19 +99,19 @@ export function Header() {
                 <Link
                   to="/engine"
                   onClick={() => setOpen(false)}
-                  className="rounded-xl bg-baazex px-4 py-3 text-center text-sm font-semibold text-on-button"
+                  className="rounded-xl bg-baazex px-4 py-3 text-center text-sm font-semibold text-white"
                 >
                   Open AI Engine
                 </Link>
               ) : (
                 <>
-                  <Link to="/login" onClick={() => setOpen(false)} className="px-3 py-2 text-sm font-semibold text-ink">
+                  <Link to="/login" onClick={() => setOpen(false)} className="px-3 py-2 text-sm font-semibold text-mist">
                     Login
                   </Link>
                   <Link
                     to="/register"
                     onClick={() => setOpen(false)}
-                    className="rounded-xl bg-baazex px-4 py-3 text-center text-sm font-semibold text-on-button"
+                    className="rounded-xl bg-baazex px-4 py-3 text-center text-sm font-semibold text-white"
                   >
                     Start Learning
                   </Link>

@@ -1,5 +1,7 @@
 import { CourseCard } from '@/components/course/CourseCard'
 import { Seo } from '@/components/Seo'
+import { PhotoBanner } from '@/components/ui/PhotoBanner'
+import { media } from '@/data/media'
 import { useAcademy } from '@/context/AcademyContext'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
@@ -32,13 +34,16 @@ export function LearningPathPage() {
   const { courses } = useAcademy()
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+    <div>
       <Seo title="Learning path" description={`A suggested ${APP_NAME} sequence from forex foundations to analysis, risk, and partner education.`} />
-      <p className="text-xs font-bold tracking-[0.18em] text-accent uppercase">Suggested sequence</p>
-      <h1 className="mt-2 text-3xl font-extrabold text-ink sm:text-4xl">Learning path</h1>
-      <p className="mt-3 max-w-2xl text-sm text-muted">
-        This path is a study recommendation, not a requirement. You can enrol in any published course at any time.
-      </p>
+      <PhotoBanner
+        image={media.study}
+        alt="A study table prepared for a structured learning path"
+        eyebrow="Suggested sequence"
+        title="Learning path"
+        text="This path is a study recommendation, not a requirement. You can enrol in any published course at any time."
+      />
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
       <div className="mt-10 space-y-12">
         {stages.map((stage) => (
           <section key={stage.title}>
@@ -61,6 +66,7 @@ export function LearningPathPage() {
       <p className="mt-10 text-sm">
         Prefer a full catalogue view? <Link to="/courses" className="font-semibold text-accent">Browse all courses</Link>
       </p>
+      </div>
     </div>
   )
 }

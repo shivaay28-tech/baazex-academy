@@ -4,7 +4,7 @@ A premium educational web application for **Baazex Financial Services L.L.C.** L
 
 This frontend is a complete React application. Login, courses, and progress use **Supabase Auth + Postgres** when `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` are set. Without those keys, the same screens run on a localStorage mock so `npm run dev` still works.
 
-Each live academy (Trading King, NextGen FX, Trade Rise, TradesX, FX Nova) should have **its own Supabase project**. See [docs/supabase.md](docs/supabase.md).
+Each live academy (Trading King, NextGen FX, Trade Rise, TradesX, FX Nova, Sigma FX) should have **its own Supabase project**. See [docs/supabase.md](docs/supabase.md).
 
 ## Stack
 
@@ -64,7 +64,7 @@ Progress, notes, enrolments, quiz attempts, certificates, and Engine plan/credit
 3. Promote an admin: `update public.profiles set role = 'admin' where email = '...';`
 4. Set `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`, and `SUPABASE_SERVICE_ROLE_KEY` on that Vercel project and redeploy.
 
-Full steps, redirect URLs, and the five-academy table: [docs/supabase.md](docs/supabase.md).
+Full steps, redirect URLs, and the academy table: [docs/supabase.md](docs/supabase.md).
 
 ## Design
 

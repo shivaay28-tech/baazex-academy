@@ -3,6 +3,7 @@ import { DashboardStatCard } from '@/components/dashboard/DashboardStatCard'
 import { Seo } from '@/components/Seo'
 import { Button } from '@/components/ui/Button'
 import { ProgressBar } from '@/components/ui/ProgressBar'
+import { courseCover, media } from '@/data/media'
 import { useAcademy } from '@/context/AcademyContext'
 import { useAuth } from '@/context/AuthContext'
 import { progressService } from '@/services/progress'
@@ -78,12 +79,15 @@ export function DashboardPage() {
                 <Link
                   key={course.id}
                   to={next ? `/learn/${course.slug}/${next.slug}` : `/courses/${course.slug}`}
-                  className="panel rounded-2xl p-4 hover:border-bright/40"
+                  className="panel flex gap-3 overflow-hidden rounded-2xl p-3 hover:shadow-float"
                 >
+                  <img src={courseCover(course.categoryId)} alt="" className="h-16 w-20 shrink-0 rounded-xl object-cover" />
+                  <div className="min-w-0 flex-1">
                   <p className="font-bold text-ink">{course.title}</p>
                   <p className="mt-1 text-sm text-muted">{next?.title ?? 'Open the course'}</p>
                   <div className="mt-3">
                     <ProgressBar value={courseProgress(course.id).percent} size="sm" />
+                  </div>
                   </div>
                 </Link>
               )
@@ -93,14 +97,21 @@ export function DashboardPage() {
       ) : null}
 
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
-        <article className="rounded-3xl border border-bright/25 bg-navy p-6 text-ink shadow-[inset_0_0_80px_rgb(var(--glow)_/_0.12)] lg:col-span-2">
-          <p className="text-xs font-bold tracking-[0.16em] text-ink uppercase">Continue learning</p>
+        <article className="relative overflow-hidden rounded-3xl lg:col-span-2">
+          <img
+            src={continueCourse ? courseCover(continueCourse.categoryId) : media.hero}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-navy/75" />
+          <div className="relative p-6 text-white">
+          <p className="text-xs font-bold tracking-[0.16em] text-bright uppercase">Continue learning</p>
           {continueCourse ? (
             <>
-              <h2 className="mt-2 text-2xl font-bold">{continueCourse.title}</h2>
-              <p className="mt-2 text-sm text-ink/65">{continueLesson?.title ?? 'Review the course modules'}</p>
+              <h2 className="mt-2 text-2xl font-semibold">{continueCourse.title}</h2>
+              <p className="mt-2 text-sm text-mist/80">{continueLesson?.title ?? 'Review the course modules'}</p>
               <div className="mt-5 max-w-md">
-                <ProgressBar value={courseProgress(continueCourse.id).percent} />
+                <ProgressBar value={courseProgress(continueCourse.id).percent} light />
               </div>
               <Button
                 className="mt-6"
@@ -117,13 +128,14 @@ export function DashboardPage() {
             </>
           ) : (
             <>
-              <h2 className="mt-2 text-2xl font-bold">Choose a course to begin</h2>
-              <p className="mt-2 text-sm text-ink/65">Enrol from the catalogue to start tracking lessons and quizzes.</p>
+              <h2 className="mt-2 text-2xl font-semibold">Choose a course to begin</h2>
+              <p className="mt-2 text-sm text-mist/80">Enrol from the catalogue to start tracking lessons and quizzes.</p>
               <Button className="mt-6" onClick={() => navigate('/courses')}>
                 Explore courses
               </Button>
             </>
           )}
+          </div>
         </article>
         <article className="panel rounded-3xl p-6">
           <h2 className="font-bold text-ink">Certificates</h2>

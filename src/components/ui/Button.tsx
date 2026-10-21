@@ -10,9 +10,9 @@ const variants: Record<Variant, string> = {
   secondary:
     'border border-bright/25 bg-white/5 text-ink hover:border-bright/50 hover:text-accent',
   ghost: 'bg-transparent text-ink hover:bg-white/10',
-  outline: 'border border-ink/20 bg-white/50 text-ink hover:bg-white',
+  outline: 'border border-white/25 bg-white/10 text-white hover:bg-white/20',
   danger: 'bg-danger text-white hover:bg-danger/90',
-  navy: 'border border-bright/20 bg-navy text-ink hover:border-bright/40 hover:bg-navy-700',
+  navy: 'border border-white/15 bg-navy text-white hover:border-bright/40 hover:bg-navy-700',
 }
 
 const sizes: Record<Size, string> = {

@@ -3,6 +3,7 @@ import { ProgressBar } from '@/components/ui/ProgressBar'
 import { useAcademy } from '@/context/AcademyContext'
 import { useAuth } from '@/context/AuthContext'
 import { categories } from '@/data/categories'
+import { courseCover } from '@/data/media'
 import { progressService } from '@/services/progress'
 import type { Course } from '@/types'
 import { getCourseLessons, getLessonCount } from '@/utils/course'
@@ -29,9 +30,14 @@ export function CourseCard({
   const openPath = enrolled && nextLesson ? `/learn/${course.slug}/${nextLesson.slug}` : `/courses/${course.slug}`
 
   return (
-    <article className="group panel flex h-full flex-col overflow-hidden rounded-2xl transition hover:-translate-y-1 hover:border-bright/40 hover:shadow-float">
-      <div className="relative h-32 overflow-hidden bg-linear-to-br from-navy via-navy-700 to-baazex">
-        <div className="absolute inset-0 opacity-40 grid-fade" />
+    <article className="group panel flex h-full flex-col overflow-hidden rounded-2xl transition hover:-translate-y-1 hover:shadow-float">
+      <div className="relative h-40 overflow-hidden">
+        <img
+          src={courseCover(course.categoryId)}
+          alt=""
+          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-linear-to-t from-navy/80 via-navy/10 to-transparent" />
         <div className="absolute inset-x-4 bottom-4 flex items-end justify-between">
           <div className="flex items-center gap-2">
             {onToggle && !enrolled ? (
@@ -40,7 +46,7 @@ export function CourseCard({
                 aria-pressed={selected}
                 aria-label={selected ? `Remove ${course.title} from selection` : `Select ${course.title}`}
                 onClick={onToggle}
-                className={`grid h-7 w-7 place-items-center rounded-lg border ${selected ? 'border-ink bg-white text-ink' : 'border-white/70 bg-white/40 text-transparent'}`}
+                className={`grid h-7 w-7 place-items-center rounded-lg border ${selected ? 'border-white bg-white text-navy' : 'border-white/70 bg-navy/40 text-transparent'}`}
               >
                 <Check className="h-4 w-4" />
               </button>
@@ -48,7 +54,7 @@ export function CourseCard({
             <DifficultyBadge level={course.difficulty} />
           </div>
           {course.popular ? (
-            <span className="rounded-full bg-white/75 px-2.5 py-1 text-[11px] font-semibold text-accent">Popular</span>
+            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-semibold text-navy">Popular</span>
           ) : null}
         </div>
       </div>
@@ -73,7 +79,7 @@ export function CourseCard({
         ) : null}
         <Link
           to={openPath}
-          className="mt-5 inline-flex h-10 items-center justify-center rounded-xl border border-bright/20 bg-navy text-sm font-semibold text-ink transition hover:border-bright/40 hover:bg-baazex hover:text-on-button hover:shadow-float"
+          className="mt-5 inline-flex h-10 items-center justify-center rounded-xl bg-navy text-sm font-semibold text-white transition hover:bg-baazex"
         >
           {enrolled ? 'Continue' : 'View Course'}
         </Link>

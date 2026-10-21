@@ -13,8 +13,9 @@ In [Supabase](https://supabase.com/dashboard) create a project per academy:
 | Trade Rise Academy | `trade-rise-academy` |
 | TradesX Academy | `tradesx-academy` |
 | FX Nova Academy | `fx-nova-academy` |
+| Sigma FX Academy | `sigma-fx-academy` |
 
-The source Baazex site can use a sixth project, or stay on the mock until you add one.
+The source Baazex site can use its own project, or stay on the mock until you add one.
 
 ## 2. Run the schema
 

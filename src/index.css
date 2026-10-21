@@ -2,29 +2,30 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --color-navy: #a9dfff;
-  --color-navy-800: #8ed4ff;
-  --color-navy-700: #6ec6ff;
-  --color-navy-600: #d4f0ff;
-  --color-baazex: #5eb8f5;
-  --color-baazex-600: #3aa6ef;
-  --color-bright: #7ed0ff;
-  --color-accent: #1468b8;
-  --color-ink: #0a1f44;
-  --color-muted: #5a7194;
-  --color-canvas: #f5f9ff;
-  --color-line: #c9daf2;
+  --font-display: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --font-serif: "Newsreader", "Iowan Old Style", Georgia, serif;
+  --color-navy: #06152b;
+  --color-navy-800: #0b2144;
+  --color-navy-700: #12315f;
+  --color-navy-600: #1a3f73;
+  --color-baazex: #0066ff;
+  --color-baazex-600: #0052cc;
+  --color-bright: #00a3ff;
+  --color-accent: #0057d9;
+  --color-ink: #172033;
+  --color-mist: #e7eef8;
+  --color-muted: #5c6b82;
+  --color-canvas: #f4f8fc;
+  --color-line: #d5e0ee;
   --color-card: #ffffff;
-  --color-on-button: #0a1f44;
+  --color-on-button: #ffffff;
   --color-success: #0f9f6e;
   --color-warning: #b86e00;
   --color-danger: #d92d20;
-  --glow: 94 184 245;
+  --glow: 0 102 255;
 
-  --shadow-card: 0 0 0 1px rgb(var(--glow) / 0.16), 0 18px 40px -28px rgb(var(--glow) / 0.35);
-  --shadow-float: 0 0 24px rgb(var(--glow) / 0.28), 0 16px 40px -20px rgb(var(--glow) / 0.4);
+  --shadow-card: 0 0 0 1px rgb(21 43 74 / 0.06), 0 18px 40px -28px rgb(6 21 43 / 0.35);
+  --shadow-float: 0 16px 40px -20px rgb(6 21 43 / 0.45);
 }
 
 @layer base {
@@ -67,7 +68,7 @@
     position: fixed;
     inset: 0;
     z-index: 1;
-    background: radial-gradient(ellipse at center, transparent 50%, rgb(var(--glow) / 0.16) 100%);
+    background: radial-gradient(ellipse at center, transparent 62%, rgb(6 21 43 / 0.05) 100%);
   }
 
   #root {
@@ -149,11 +150,9 @@
     inset: 0;
     z-index: -1;
     background:
-      radial-gradient(980px 520px at 8% -8%, rgb(var(--glow) / 0.35), transparent 58%),
-      radial-gradient(820px 480px at 96% 4%, rgb(var(--glow) / 0.28), transparent 52%),
-      radial-gradient(720px 460px at 60% 110%, rgb(var(--glow) / 0.2), transparent 55%),
+      radial-gradient(980px 520px at 8% -8%, rgb(var(--glow) / 0.08), transparent 58%),
+      radial-gradient(820px 480px at 96% 4%, rgb(0 163 255 / 0.06), transparent 52%),
       var(--color-canvas);
-    animation: bloom-drift 22s ease-in-out infinite alternate;
   }
 
   .atmosphere::after {
@@ -163,29 +162,30 @@
     inset: 0;
     z-index: -1;
     background-image:
-      linear-gradient(rgb(var(--glow) / 0.16) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--glow) / 0.16) 1px, transparent 1px);
-    background-size: 64px 64px;
-    mask-image: radial-gradient(ellipse at 50% 35%, black 12%, transparent 74%);
+      linear-gradient(rgb(6 21 43 / 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(6 21 43 / 0.04) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse at 50% 20%, black 8%, transparent 70%);
   }
 
   .glass {
-    background: rgb(255 255 255 / 0.82);
+    background: rgb(255 255 255 / 0.88);
     backdrop-filter: blur(18px);
-    border: 1px solid rgb(var(--glow) / 0.35);
-    box-shadow: 0 0 0 1px rgb(var(--glow) / 0.08), 0 20px 50px -28px rgb(var(--glow) / 0.35);
+    border: 1px solid rgb(213 224 238 / 0.9);
+    box-shadow: var(--shadow-card);
   }
 
   .glass-dark {
-    background: rgb(255 255 255 / 0.92);
+    background: rgb(6 21 43 / 0.72);
+    color: var(--color-mist);
     backdrop-filter: blur(20px);
-    border: 1px solid rgb(var(--glow) / 0.4);
+    border: 1px solid rgb(255 255 255 / 0.14);
   }
 
   .panel {
     position: relative;
     background: #ffffff;
-    border: 1px solid rgb(var(--glow) / 0.32);
+    border: 1px solid var(--color-line);
     box-shadow: var(--shadow-card);
   }
 
@@ -196,21 +196,22 @@
 
   .gradient-hero {
     background:
-      radial-gradient(900px 420px at 85% -10%, rgb(255 255 255 / 0.28), transparent 50%),
-      radial-gradient(700px 380px at 0% 120%, rgb(255 255 255 / 0.45), transparent 55%),
-      linear-gradient(160deg, var(--color-navy-600) 0%, var(--color-navy-800) 48%, var(--color-baazex) 100%);
+      radial-gradient(900px 420px at 85% -10%, rgb(0 163 255 / 0.28), transparent 52%),
+      radial-gradient(700px 380px at 0% 110%, rgb(0 102 255 / 0.18), transparent 55%),
+      linear-gradient(165deg, #06152b 0%, #0b2144 58%, #12315f 100%);
+    color: var(--color-mist);
   }
 
   .grid-fade {
     background-image:
-      linear-gradient(rgb(var(--glow) / 0.12) 1px, transparent 1px),
-      linear-gradient(90deg, rgb(var(--glow) / 0.12) 1px, transparent 1px);
+      linear-gradient(rgb(255 255 255 / 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.08) 1px, transparent 1px);
     background-size: 44px 44px;
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
   }
 
   .text-gradient {
-    background: linear-gradient(100deg, var(--color-ink) 0%, var(--color-accent) 48%, var(--color-ink) 100%);
+    background: linear-gradient(100deg, #ffffff 0%, #8fd4ff 52%, #ffffff 100%);
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -234,7 +235,7 @@
 
   .engine-orb {
     background:
-      radial-gradient(circle at 32% 28%, #ffffff 0%, var(--color-navy) 32%, var(--color-baazex) 68%, var(--color-accent) 100%);
+      radial-gradient(circle at 32% 28%, #ffffff 0%, #8fd4ff 28%, var(--color-baazex) 68%, var(--color-navy) 100%);
     box-shadow:
       0 0 40px rgb(var(--glow) / 0.55),
       0 0 0 8px rgb(var(--glow) / 0.14);

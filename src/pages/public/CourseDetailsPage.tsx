@@ -8,6 +8,7 @@ import { useAcademy } from '@/context/AcademyContext'
 import { useAuth } from '@/context/AuthContext'
 import { useToast } from '@/context/ToastContext'
 import { categories } from '@/data/categories'
+import { courseCover } from '@/data/media'
 import { catalogService } from '@/services/catalog'
 import { progressService } from '@/services/progress'
 import { getCourseDuration, getCourseLessons, getLessonCount } from '@/utils/course'
@@ -59,13 +60,19 @@ export function CourseDetailsPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12">
+    <div>
       <Seo title={course.title} description={course.description} />
-      <div className="grid gap-8 lg:grid-cols-12">
+      <section className="relative isolate h-64 overflow-hidden bg-navy sm:h-80">
+        <img src={courseCover(course.categoryId)} alt="" className="absolute inset-0 h-full w-full object-cover" />
+        <div className="absolute inset-0 bg-linear-to-t from-navy via-navy/55 to-navy/20" />
+        <div className="relative mx-auto flex h-full max-w-7xl flex-col justify-end px-4 pb-8 sm:px-6">
+          <p className="text-xs font-bold tracking-[0.16em] text-bright uppercase">{category?.name}</p>
+          <h1 className="mt-2 max-w-3xl text-3xl font-semibold text-white sm:text-5xl">{course.title}</h1>
+        </div>
+      </section>
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-12">
         <div className="lg:col-span-8">
-          <p className="text-xs font-bold tracking-[0.16em] text-accent uppercase">{category?.name}</p>
-          <h1 className="mt-2 text-3xl font-extrabold text-ink sm:text-4xl">{course.title}</h1>
-          <p className="mt-3 text-base text-muted">{course.description}</p>
+          <p className="text-base text-muted">{course.description}</p>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-muted">
             <DifficultyBadge level={course.difficulty} />
             <span className="inline-flex items-center gap-1">

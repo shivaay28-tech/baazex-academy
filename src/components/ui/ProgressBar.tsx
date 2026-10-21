@@ -4,22 +4,24 @@ export function ProgressBar({
   value,
   size = 'md',
   label,
+  light = false,
 }: {
   value: number
   size?: 'sm' | 'md'
   label?: string
+  light?: boolean
 }) {
   const clamped = Math.max(0, Math.min(100, value))
   return (
     <div className="w-full">
       {label ? (
-        <div className="mb-1 flex items-center justify-between text-xs font-medium text-muted">
+        <div className={cn('mb-1 flex items-center justify-between text-xs font-medium', light ? 'text-mist/80' : 'text-muted')}>
           <span>{label}</span>
           <span>{clamped}%</span>
         </div>
       ) : null}
       <div
-        className={cn('overflow-hidden rounded-full bg-baazex/15', size === 'sm' ? 'h-1.5' : 'h-2.5')}
+        className={cn('overflow-hidden rounded-full', light ? 'bg-white/20' : 'bg-baazex/15', size === 'sm' ? 'h-1.5' : 'h-2.5')}
         role="progressbar"
         aria-valuenow={clamped}
         aria-valuemin={0}

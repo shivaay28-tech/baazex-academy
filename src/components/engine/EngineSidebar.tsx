@@ -68,7 +68,7 @@ export function EngineSidebar({
   return (
     <aside
       className={cn(
-        'flex h-full flex-col border-r border-white/20 bg-navy text-ink shadow-[inset_-1px_0_0_rgb(255_255_255_/_0.18)] backdrop-blur-xl transition-all duration-200',
+        'flex h-full flex-col border-r border-white/10 bg-navy text-mist transition-all duration-200',
         collapsed ? 'w-[76px]' : 'w-[272px]',
       )}
     >
@@ -76,7 +76,7 @@ export function EngineSidebar({
         <Link to="/" className="min-w-0">
           <Logo light compact={collapsed} />
         </Link>
-        <button type="button" onClick={onToggle} className="rounded-lg p-1.5 text-ink/50 hover:bg-white/8" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+        <button type="button" onClick={onToggle} className="rounded-lg p-1.5 text-mist/60 hover:bg-white/8 hover:text-white" aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </button>
       </div>
@@ -89,12 +89,12 @@ export function EngineSidebar({
             className="flex h-11 w-full items-center justify-between rounded-xl border border-white/10 bg-white/5 px-3 text-sm font-semibold hover:bg-white/10"
           >
             <span className="inline-flex items-center gap-2">
-              <Plus className="h-4 w-4 text-ink" />
+              <Plus className="h-4 w-4 text-white" />
               New analysis
             </span>
-            <kbd className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-ink/45">⌘K</kbd>
+            <kbd className="rounded-md bg-white/10 px-1.5 py-0.5 text-[10px] tracking-wide text-mist/50">⌘K</kbd>
           </button>
-          <p className="mt-4 px-1 text-[10px] font-bold tracking-[0.18em] text-ink/35 uppercase">Recent</p>
+          <p className="mt-4 px-1 text-[10px] font-bold tracking-[0.18em] text-mist/40 uppercase">Recent</p>
           <label className="mt-2 flex h-10 items-center gap-2 rounded-xl bg-white/70 px-3 text-ink/40">
             <Search className="h-4 w-4 shrink-0" />
             <input
@@ -106,7 +106,7 @@ export function EngineSidebar({
           </label>
         </div>
       ) : (
-        <button type="button" onClick={onNew} className="mx-auto grid h-10 w-10 place-items-center rounded-xl bg-white/15 text-ink" aria-label="New analysis">
+        <button type="button" onClick={onNew} className="mx-auto grid h-10 w-10 place-items-center rounded-xl bg-white/15 text-white" aria-label="New analysis">
           <Plus className="h-4 w-4" />
         </button>
       )}
@@ -121,13 +121,13 @@ export function EngineSidebar({
             >
               {collapsed ? <MoreHorizontal className="mx-auto h-4 w-4" /> : (
                 <>
-                  <span className="block truncate font-medium text-ink/85">{item.title}</span>
-                  <span className="block text-[11px] text-ink/35">{formatDate(item.updatedAt)}</span>
+                  <span className="block truncate font-medium text-mist">{item.title}</span>
+                  <span className="block text-[11px] text-mist/45">{formatDate(item.updatedAt)}</span>
                 </>
               )}
             </button>
             {!collapsed ? (
-              <button type="button" className="hidden rounded-md p-1 text-ink/30 hover:text-danger group-hover:block" onClick={() => onDelete(item.id)} aria-label="Delete conversation">
+              <button type="button" className="hidden rounded-md p-1 text-mist/40 hover:text-danger group-hover:block" onClick={() => onDelete(item.id)} aria-label="Delete conversation">
                 <Trash2 className="h-3.5 w-3.5" />
               </button>
             ) : null}
@@ -142,7 +142,7 @@ export function EngineSidebar({
             {collapsed ? null : (
               <span className="min-w-0">
                 <span className="block truncate text-sm font-semibold">{user.fullName}</span>
-                <span className="block text-[11px] text-ink/40">
+                <span className="block text-[11px] text-mist/50">
                   {remaining} of {limit}
                 </span>
               </span>
@@ -154,7 +154,7 @@ export function EngineSidebar({
             {collapsed ? null : (
               <span>
                 <span className="block text-sm font-semibold">Sign in</span>
-                <span className="block text-[11px] text-ink/40">{remaining} of {limit}</span>
+                <span className="block text-[11px] text-mist/50">{remaining} of {limit}</span>
               </span>
             )}
           </Link>
