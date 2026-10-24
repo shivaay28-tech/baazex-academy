@@ -155,14 +155,6 @@
       var(--color-canvas);
   }
 
-  .atmosphere.bg-page::before {
-    background:
-      radial-gradient(980px 520px at 8% -8%, rgb(var(--glow) / 0.08), transparent 58%),
-      radial-gradient(820px 480px at 96% 4%, rgb(0 163 255 / 0.06), transparent 52%),
-      linear-gradient(rgb(244 248 252 / 0.4), rgb(244 248 252 / 0.55)),
-      var(--page-bg) center / cover no-repeat;
-  }
-
   .glass {
     background: rgb(255 255 255 / 0.88);
     backdrop-filter: blur(18px);

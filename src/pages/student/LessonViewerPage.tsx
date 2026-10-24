@@ -10,11 +10,10 @@ import { catalogService } from '@/services/catalog'
 import { progressService } from '@/services/progress'
 import { APP_NAME } from '@/utils/constants'
 import { lessonNotesPdf } from '@/utils/lessonPdf'
-import { pageBackgroundStyle } from '@/utils/pageBackground'
 import { findLesson, getAdjacentLessons, getCourseLessons } from '@/utils/course'
 import { ChevronLeft, ChevronRight, Download, Menu, PanelLeftClose } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom'
 
 export function LessonViewerPage() {
   const { courseSlug, lessonSlug } = useParams()
@@ -23,7 +22,6 @@ export function LessonViewerPage() {
   const { completeLesson, enroll, isEnrolled, refresh } = useAcademy()
   const { push } = useToast()
   const navigate = useNavigate()
-  const { pathname } = useLocation()
   const [sidebar, setSidebar] = useState(true)
   const [mobileCurriculum, setMobileCurriculum] = useState(false)
   const [saving, setSaving] = useState(false)
@@ -86,7 +84,7 @@ export function LessonViewerPage() {
   const quizReady = completedIds.length >= Math.max(1, lessons.length - 1)
 
   return (
-    <div className="atmosphere bg-page flex min-h-dvh overflow-x-clip" style={pageBackgroundStyle(pathname)}>
+    <div className="atmosphere flex min-h-dvh overflow-x-clip">
       <Seo title={lesson.title} description={lesson.summary} />
       {sidebar ? (
         <aside className="glass hidden w-[320px] shrink-0 overflow-y-auto border-r border-bright/15 p-4 lg:block">

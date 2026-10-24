@@ -15,13 +15,11 @@ import { formatLiveQuote, tradingViewService, type LiveQuote } from '@/services/
 import type { AiAttachment, AiConversation } from '@/types'
 import { media } from '@/data/media'
 import { APP_NAME, DISCLAIMER, ENGINE_NAME } from '@/utils/constants'
-import { pageBackgroundStyle } from '@/utils/pageBackground'
 import { analysisTitle, uid } from '@/utils/format'
 import { Camera, Clapperboard, Copy, Menu, MonitorUp, NotebookPen, RefreshCw } from 'lucide-react'
 import { useCallback, useEffect, useRef, useState, type DragEvent, type FormEvent } from 'react'
-import { useLocation } from 'react-router-dom'
+
 export function EnginePage() {
-  const { pathname } = useLocation()
   const { user } = useAuth()
   const { push } = useToast()
   const [collapsed, setCollapsed] = useState(false)
@@ -553,7 +551,7 @@ export function EnginePage() {
   }
 
   return (
-    <div className="atmosphere bg-page flex h-dvh max-w-full overflow-hidden text-ink" style={pageBackgroundStyle(pathname)}>
+    <div className="atmosphere flex h-dvh max-w-full overflow-hidden text-ink">
       <Seo
         title="AI Engine"
         description={`${APP_NAME} AI Engine — educational chart and market-literacy assistant. Not investment advice.`}

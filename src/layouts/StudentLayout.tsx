@@ -2,9 +2,8 @@ import { MobileNavigation } from '@/components/layout/MobileNavigation'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { useAcademy } from '@/context/AcademyContext'
 import { useMediaQuery } from '@/hooks/useMediaQuery'
-import { pageBackgroundStyle } from '@/utils/pageBackground'
 import { useState } from 'react'
-import { Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
 
 export function StudentLayout() {
   const isDesktop = useMediaQuery('(min-width: 1024px)')
@@ -12,14 +11,13 @@ export function StudentLayout() {
   const [query, setQuery] = useState('')
   const { courses } = useAcademy()
   const navigate = useNavigate()
-  const { pathname } = useLocation()
 
   const filtered = query
     ? courses.filter((course) => course.title.toLowerCase().includes(query.toLowerCase()))
     : []
 
   return (
-    <div className="atmosphere bg-page flex h-dvh overflow-hidden" style={pageBackgroundStyle(pathname)}>
+    <div className="atmosphere flex h-dvh overflow-hidden">
       <div className="hidden md:block">
         <Sidebar collapsed={!isDesktop || collapsed} onToggle={() => setCollapsed((value) => !value)} query={query} onQuery={setQuery} />
       </div>

@@ -217,10 +217,10 @@ function pagesFor(blocks: Block[]) {
   return pages
 }
 
-function decorate(body: string[], pageNumber: number, pageCount: number, runningTitle: string) {
+function decorate(body: string[], pageNumber: number, pageCount: number, runningTitle: string, academyLabel: string) {
   const header = [
     `${NAVY} rg\n0 ${PAGE_H - 36} ${PAGE_W} 36 re\nf\n`,
-    textCommand('F2', 9, MARGIN_X, PAGE_H - 23, '1 1 1', 'BAAZEX ACADEMY'),
+    textCommand('F2', 9, MARGIN_X, PAGE_H - 23, '1 1 1', academyLabel),
     textCommand('F1', 9, PAGE_W - MARGIN_X - textWidth('Lesson notes', 9, false), PAGE_H - 23, '0.78 0.88 1', 'Lesson notes'),
     pageNumber > 1 ? textCommand('F1', 8, MARGIN_X, PAGE_H - 58, MUTED, runningTitle) : '',
     body.join(''),
@@ -301,7 +301,8 @@ function assemble(streams: string[]) {
 export function lessonNotesPdf(input: LessonPdfInput) {
   const running = plain(`${input.courseTitle} | ${input.lessonTitle}`)
   const runningTitle = running.length > 88 ? `${running.slice(0, 85)}...` : running
+  const academyLabel = plain(input.academy).toUpperCase() || 'ACADEMY'
   const laidOut = pagesFor(documentBlocks(input))
-  const streams = laidOut.map((body, index) => decorate(body, index + 1, laidOut.length, runningTitle))
+  const streams = laidOut.map((body, index) => decorate(body, index + 1, laidOut.length, runningTitle, academyLabel))
   return new Blob([assemble(streams)], { type: 'application/pdf' })
 }
