@@ -39,7 +39,11 @@ export function AcademyProvider({ children }: { children: ReactNode }) {
     }
   }, [user?.id, user?.role])
 
-  const courses = useMemo(() => catalogService.listCourses(), [revision])
+  const courses = useMemo(() => {
+    // Read after each catalog refresh. `revision` is the signal that storage changed.
+    void revision
+    return catalogService.listCourses()
+  }, [revision])
 
   const enroll = useCallback(
     async (courseId: string) => {
@@ -79,6 +83,7 @@ export function AcademyProvider({ children }: { children: ReactNode }) {
 
   const courseProgress = useCallback(
     (courseId: string) => {
+      void revision
       const course = catalogService.getCourse(courseId)
       const total = course ? getCourseLessons(course).length : 0
       if (!user) return { completed: 0, total, percent: 0 }
@@ -89,12 +94,18 @@ export function AcademyProvider({ children }: { children: ReactNode }) {
   )
 
   const isEnrolled = useCallback(
-    (courseId: string) => (user ? progressService.isEnrolled(user.id, courseId) : false),
+    (courseId: string) => {
+      void revision
+      return user ? progressService.isEnrolled(user.id, courseId) : false
+    },
     [user, revision],
   )
 
   const isSaved = useCallback(
-    (courseId: string) => (user ? progressService.isSaved(user.id, courseId) : false),
+    (courseId: string) => {
+      void revision
+      return user ? progressService.isSaved(user.id, courseId) : false
+    },
     [user, revision],
   )
 

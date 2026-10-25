@@ -25,18 +25,18 @@ export function LessonViewerPage() {
   const [sidebar, setSidebar] = useState(true)
   const [mobileCurriculum, setMobileCurriculum] = useState(false)
   const [saving, setSaving] = useState(false)
-  const [note, setNote] = useState('')
-
   const lesson = course && lessonSlug ? findLesson(course, lessonSlug) : undefined
   const adjacent = course && lessonSlug ? getAdjacentLessons(course, lessonSlug) : undefined
   const completedIds = user && course ? progressService.completedLessonIds(user.id, course.id) : []
   const completed = lesson ? completedIds.includes(lesson.id) : false
-
-  useEffect(() => {
-    if (user && lesson) {
-      setNote(progressService.getNote(user.id, lesson.id)?.content ?? '')
-    }
-  }, [user, lesson])
+  const noteKey = user && lesson ? `${user.id}:${lesson.id}` : ''
+  const storedNote = user && lesson ? (progressService.getNote(user.id, lesson.id)?.content ?? '') : ''
+  const [noteDraft, setNoteDraft] = useState({ key: noteKey, value: storedNote })
+  if (noteDraft.key !== noteKey) {
+    setNoteDraft({ key: noteKey, value: storedNote })
+  }
+  const note = noteDraft.value
+  const setNote = (value: string) => setNoteDraft({ key: noteKey, value })
 
   useEffect(() => {
     if (user && course && !isEnrolled(course.id)) {

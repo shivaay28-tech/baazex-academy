@@ -238,9 +238,10 @@ export function AdminLessonsPage() {
       push('error', 'Add a module first')
       return
     }
+    const stamp = Date.now()
     const lesson: Lesson = {
-      id: `lesson-${Date.now()}`,
-      slug: `lesson-${Date.now()}`,
+      id: `lesson-${stamp}`,
+      slug: `lesson-${stamp}`,
       title: 'New lesson',
       durationMinutes: 10,
       order: firstModule.lessons.length + 1,

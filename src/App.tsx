@@ -37,12 +37,14 @@ import { MyCoursesPage } from '@/pages/student/MyCoursesPage'
 import { ProfilePage } from '@/pages/student/ProfilePage'
 import { QuizPage } from '@/pages/student/QuizPage'
 import { CreditsPage } from '@/pages/admin/CreditsPage'
-import { EnginePage } from '@/pages/engine/EnginePage'
 import { isSupabaseEnabled } from '@/services/backend'
 import { authService } from '@/services/auth'
 import { catalogService } from '@/services/catalog'
 import { progressService } from '@/services/progress'
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
+
+const EnginePage = lazy(() => import('@/pages/engine/EnginePage').then((module) => ({ default: module.EnginePage })))
 
 if (!isSupabaseEnabled()) {
   catalogService.listCourses()
@@ -104,7 +106,20 @@ export default function App() {
                 <Route path="/quiz/:courseSlug/:quizId" element={<QuizPage />} />
               </Route>
 
-              <Route path="/engine" element={<EnginePage />} />
+              <Route
+                path="/engine"
+                element={
+                  <Suspense
+                    fallback={
+                      <div className="grid min-h-dvh place-items-center bg-canvas text-sm font-semibold text-muted">
+                        Opening AI Engine…
+                      </div>
+                    }
+                  >
+                    <EnginePage />
+                  </Suspense>
+                }
+              />
 
               <Route
                 path="/learn/:courseSlug/:lessonSlug"

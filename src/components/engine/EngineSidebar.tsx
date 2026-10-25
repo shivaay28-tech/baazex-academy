@@ -7,7 +7,7 @@ import { BAAZEX_ACCOUNT_URL } from '@/utils/constants'
 import { cn } from '@/utils/cn'
 import { formatDate } from '@/utils/format'
 import { ChevronLeft, ChevronRight, ExternalLink, MoreHorizontal, Plus, Search, Trash2 } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export function EngineSidebar({
@@ -37,12 +37,14 @@ export function EngineSidebar({
 }) {
   const { user, refresh } = useAuth()
   const { push } = useToast()
-  const [baazexId, setBaazexId] = useState('')
+  const savedBaazexId = user?.baazexId ?? ''
+  const [baazexId, setBaazexId] = useState(savedBaazexId)
+  const [syncedBaazexId, setSyncedBaazexId] = useState(savedBaazexId)
   const [savingId, setSavingId] = useState(false)
-
-  useEffect(() => {
-    setBaazexId(user?.baazexId ?? '')
-  }, [user?.baazexId])
+  if (savedBaazexId !== syncedBaazexId) {
+    setSyncedBaazexId(savedBaazexId)
+    setBaazexId(savedBaazexId)
+  }
 
   async function saveBaazexId() {
     if (!user) return

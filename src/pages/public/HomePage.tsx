@@ -130,7 +130,7 @@ export function HomePage() {
               Study charts with an educational assistant
             </h2>
             <p className="mt-4 max-w-xl text-sm leading-relaxed text-mist/75">
-              The engine reads the live TradingView price and answers with a buy or sell call, an entry, a stop, and a target. Five questions are included. A Baazex deposit adds 15% of the amount as questions.
+              The engine reads the live TradingView price and shows a study example with a side, an entry, a stop, and a target. It is not a personal trade recommendation. Five questions are included. A Baazex deposit adds 15% of the amount as questions.
             </p>
             <Button className="mt-6" size="lg" onClick={() => navigate('/engine')} icon={<Sparkles className="h-4 w-4" />}>
               Try the AI Engine

@@ -5,19 +5,21 @@ import { useToast } from '@/context/ToastContext'
 import { authService } from '@/services/auth'
 import { BAAZEX_ACCOUNT_URL } from '@/utils/constants'
 import { ExternalLink } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export function BasicCheckout() {
   const { user, refresh } = useAuth()
   const { push } = useToast()
   const navigate = useNavigate()
-  const [baazexId, setBaazexId] = useState('')
+  const savedBaazexId = user?.baazexId ?? ''
+  const [baazexId, setBaazexId] = useState(savedBaazexId)
+  const [syncedBaazexId, setSyncedBaazexId] = useState(savedBaazexId)
   const [busy, setBusy] = useState(false)
-
-  useEffect(() => {
-    setBaazexId(user?.baazexId ?? '')
-  }, [user?.baazexId])
+  if (savedBaazexId !== syncedBaazexId) {
+    setSyncedBaazexId(savedBaazexId)
+    setBaazexId(savedBaazexId)
+  }
 
   async function save() {
     if (!user) {
